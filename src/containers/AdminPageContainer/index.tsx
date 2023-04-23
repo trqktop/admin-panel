@@ -93,7 +93,6 @@ const AdminPageContainer = ({ children }: any) => {
         </Content>
       </Layout>
     </Layout >
-
   );
 };
 

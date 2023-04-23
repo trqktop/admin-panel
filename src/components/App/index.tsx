@@ -12,12 +12,9 @@ const ProtectedRoute: any = ({
   redirectPath = "/",
   children,
 }: any): any => {
-  const user: any = localStorage.getItem("user");
-  if (user?.length) {
-    const { success, data } = JSON.parse(user);
-    if (success && data.user.tokken) {
-      return children;
-    }
+  const token: any = localStorage.getItem("token");
+  if (token) {
+    return children;
   }
   return <Navigate to={redirectPath} replace />;
 };
@@ -33,9 +30,9 @@ const App: React.FunctionComponent = () => {
             <AdminPageContainer />
           </ProtectedRoute>
         }>
+          <Route path="dashboard" element={<ProductsContainer />} />
           <Route path="products" element={<ProductsContainer />} />
           <Route path="orders" element={<ProductsContainer />} />
-          <Route path="setting" element={<OrdersContainer />} />
         </Route>
       </Routes>
     </div>

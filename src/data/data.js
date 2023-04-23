@@ -58,9 +58,9 @@ const userSurnames = {
   3: { id: 3, name: "admin" },
 };
 const logins = {
-  1: { id: 1, login: "t1000", password: "winx", tokken: "_oouups" },
-  2: { id: 2, login: "matt", password: "damme", tokken: "_helloworld" },
-  3: { id: 3, login: "a", password: "a", tokken: "_admin" },
+  1: { id: 1, login: "t1000", password: "winx", token: "_oouups" },
+  2: { id: 2, login: "matt", password: "damme", token: "_helloworld" },
+  3: { id: 3, login: "a", password: "a", token: "_admin" },
 };
 
 //1 ко многим
@@ -78,7 +78,7 @@ const usersWithDetails = Object.values(users).map(
     adminAccess: isAdmin,
     login: logins[loginId].login,
     password: logins[loginId].password,
-    tokken: logins[loginId].tokken,
+    token: logins[loginId].token,
     age,
   })
 );
@@ -93,7 +93,7 @@ const usersWithDetails = Object.values(users).map(
 //       "adminAccess": false,
 //       "login": "t1000",
 //       "password": "winx",
-//       "tokken": "oouups",
+//       "token": "oouups",
 //       "age": 15
 //   },
 //   {
@@ -102,7 +102,7 @@ const usersWithDetails = Object.values(users).map(
 //       "adminAccess": true,
 //       "login": "matt",
 //       "password": "damme",
-//       "tokken": "helloworld",
+//       "token": "helloworld",
 //       "age": 120
 //   }
 // ]

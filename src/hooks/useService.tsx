@@ -7,12 +7,12 @@ type responseState = {
   error: boolean;
   loading: boolean;
   validateStatus:
-    | ""
-    | "error"
-    | "validating"
-    | "success"
-    | "warning"
-    | undefined;
+  | ""
+  | "error"
+  | "validating"
+  | "success"
+  | "warning"
+  | undefined;
   helpMessage: string;
   response: any;
   success: boolean;
@@ -58,6 +58,7 @@ const useService = () => {
         validateStatus: "success",
       }));
       localStorage.setItem("user", res);
+      localStorage.setItem('token', parseRes.data.user.token)
     } catch (error: any) {
       setState((state) => ({
         ...state,
