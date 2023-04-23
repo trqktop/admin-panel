@@ -1,0 +1,8 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.app {
+  @include column;
+  @include fullscreen;
+  background-color: $primary-color;
+}

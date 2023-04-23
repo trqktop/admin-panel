@@ -1,0 +1,17 @@
+@import "../../styles/mixins";
+
+.adminPage {
+  display: flex;
+  min-width: 100%;
+}
+.adminMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 0.3;
+  border: 1px black solid;
+}
+.adminContent {
+  flex: 1.7;
+  border: 1px green solid;
+}

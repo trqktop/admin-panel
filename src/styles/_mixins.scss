@@ -1,0 +1,30 @@
+@import "./variables";
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin fullscreen {
+  min-width: 100vw;
+  min-height: 100vh;
+  flex: 1;
+}
+
+@mixin selfCenter {
+  margin: auto;
+  align-self: center;
+  justify-self: center;
+}
+
+
+@mixin layout {
+  @include column;
+  @include fullscreen;
+  background-color: $primary-color;
+}

@@ -1,0 +1,10 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+.loginForm {
+  background-color: $secondary-color;
+  padding: $form-padding;
+  border-radius: $primary-border-radius;
+  @include selfCenter;
+}
+
+
