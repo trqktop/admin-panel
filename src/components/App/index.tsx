@@ -4,13 +4,15 @@ import LoginFormContainer from "../../containers/LoginFormContainer";
 import { Route, Routes, Navigate } from "react-router-dom";
 import AdminPageContainer from "../../containers/AdminPageContainer";
 import OrdersContainer from "../../containers/OrdersContainer";
+import ProductsContainer from "../../containers/ProductsContainer";
+
+
 
 const ProtectedRoute: any = ({
   redirectPath = "/",
   children,
 }: any): any => {
   const user: any = localStorage.getItem("user");
-
   if (user?.length) {
     const { success, data } = JSON.parse(user);
     if (success && data.user.tokken) {
@@ -26,19 +28,14 @@ const App: React.FunctionComponent = () => {
     <div className={styles.app}>
       <Routes>
         <Route path="/" element={<LoginFormContainer />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminPageContainer />
-            </ProtectedRoute>
-          }
-        >
-          <Route>
-            <Route path=":orders" element={<OrdersContainer />} />
-            <Route path=":products" element={<OrdersContainer />} />
-            <Route path=":setting" element={<OrdersContainer />} />
-          </Route>
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminPageContainer />
+          </ProtectedRoute>
+        }>
+          <Route path="products" element={<ProductsContainer />} />
+          <Route path="orders" element={<ProductsContainer />} />
+          <Route path="setting" element={<OrdersContainer />} />
         </Route>
       </Routes>
     </div>

@@ -4,6 +4,7 @@ const models = { 1: { id: 1, name: "Classic" }, 2: { id: 2, name: "Box" } };
 const colors = { 1: { id: 1, name: "Red" }, 2: { id: 2, name: "Blue" } };
 const sizes = { 1: { id: 1, name: "M" }, 2: { id: 2, name: "s" } };
 const prices = { 1: { id: 1, value: 700 }, 2: { id: 2, value: 900 } };
+
 const inderWearNames = {
   1: { id: 1, name: "Радость" },
   2: { id: 2, name: "Печаль" },
