@@ -1,41 +1,41 @@
-import React, { useMemo, createContext } from "react";
-import styles from "./App.module.scss";
-import LoginFormContainer from "../../containers/LoginFormContainer";
-import { Route, Routes, Navigate } from "react-router-dom";
-import AdminPageContainer from "../../containers/AdminPageContainer";
-import OrdersContainer from "../../containers/OrdersContainer";
+import { Route, Routes } from "react-router-dom";
+import HomeContainer from "../../containers/HomeContainer";
 import ProductsContainer from "../../containers/ProductsContainer";
-
-
-
-const ProtectedRoute: any = ({
-  redirectPath = "/",
-  children,
-}: any): any => {
-  const token: any = localStorage.getItem("token");
+import StoreLayout from "../../containers/StoreLayoutContainer";
+import "../../data/index";
+import AdminLayout from "../../containers/AdminLayoutContainer";
+import AdminHome from "../AdminHome";
+import AdminSiderItem from "../AdminSiderItem";
+const RouterProtector = ({ children }: any) => {
+  const token = localStorage.getItem("token");
   if (token) {
     return children;
   }
-  return <Navigate to={redirectPath} replace />;
+  return null;
 };
 
-const App: React.FunctionComponent = () => {
-
+const App: React.FC = () => {
   return (
-    <div className={styles.app}>
-      <Routes>
-        <Route path="/" element={<LoginFormContainer />} />
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <AdminPageContainer />
-          </ProtectedRoute>
-        }>
-          <Route path="dashboard" element={<ProductsContainer />} />
-          <Route path="products" element={<ProductsContainer />} />
-          <Route path="orders" element={<ProductsContainer />} />
-        </Route>
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<StoreLayout />}>
+        <Route index element={<HomeContainer />} />
+        <Route path="products/:id" element={<ProductsContainer />} />
+      </Route>
+      <Route
+        path="admin"
+        element={
+          <RouterProtector>
+            <AdminLayout />
+          </RouterProtector>
+        }
+      >
+        <Route index element={<AdminHome />} />
+        <Route path="orders" element={<AdminSiderItem />} />
+        <Route path="products" element={<AdminSiderItem />} />
+        <Route path="categories" element={<AdminSiderItem />} />
+        <Route path="brands" element={<AdminSiderItem />} />
+      </Route>
+    </Routes>
   );
 };
 
