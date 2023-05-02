@@ -398,3 +398,7 @@ template {
   max-height: 100vh;
   overflow-x: hidden;
 }
+
+html, body {
+  height: 100%;
+}

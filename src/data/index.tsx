@@ -1,7 +1,6 @@
 import collect from "collect.js";
-import { DBProductType, DBCategoryType, DBBrandsType } from "../types";
 
-const brands: Array<DBBrandsType> = [
+const brandsDB = [
   {
     id: 1,
     name: "Nike",
@@ -16,7 +15,7 @@ const brands: Array<DBBrandsType> = [
   },
 ];
 
-const products: Array<DBProductType> = [
+const productsDB = [
   {
     id: 1,
     name: "Майка белая",
@@ -101,100 +100,27 @@ const products: Array<DBProductType> = [
 
 const admins = [{ id: 1, name: "a", password: "a", token: "s" }];
 
-const categories: Array<DBCategoryType> = [
-  { id: 1, name: "Одежда", parent_id: null, children: [] },
-  { id: 2, name: "Обувь", parent_id: null, children: [] },
-  { id: 3, name: "Майки", parent_id: 1, children: [] },
-  { id: 4, name: "Штаны", parent_id: 1, children: [] },
-  { id: 5, name: "Кеды", parent_id: 2, children: [] },
-  { id: 6, name: "Кросовки", parent_id: 2, children: [] },
-  { id: 7, name: "Ботинки", parent_id: 2, children: [] },
+const categoriesDB = [
+  { id: 1, name: "Одежда", parent_id: null, children: null },
+  { id: 2, name: "Обувь", parent_id: null, children: null },
+  { id: 3, name: "Майки", parent_id: 1, children: null },
+  { id: 4, name: "Штаны", parent_id: 1, children: null },
+  { id: 5, name: "Кеды", parent_id: 2, children: null },
+  { id: 6, name: "Кросовки", parent_id: 2, children: null },
+  { id: 7, name: "Ботинки", parent_id: 2, children: null },
 ];
 
-const categoriesCollection = collect(categories);
-const productCollection = collect(products);
-const brandsColletion = collect(brands);
-const adminsCollection = collect(admins);
 
-const categoriesToTree = () => {
-  const mainCategoriesCollection = categoriesCollection.where(
-    "parent_id",
-    null
-  );
-  const subCategoriesCollection = categoriesCollection.where("parent_id", true);
-  return mainCategoriesCollection.map((item: DBCategoryType) => {
-    item.children = subCategoriesCollection
-      .where("parent_id", "===", item.id)
-      .toArray();
-    return item;
-  });
-};
 
-const SELECT = (request: string, data: string | any) => {
-  if (request.includes("* FROM products WHERE category_id =")) {
-    const products = Array.from(
-      productCollection.where("category_id", "==", data)
-    );
-    return products;
+const getCollections = () => {
+  const categories = collect(categoriesDB).toArray()
+  const products = collect(productsDB).toArray()
+  const brands = collect(brandsDB).toArray()
+  return {
+    products, categories, brands
   }
-  if (request.includes("* FROM categories")) {
-    return Array.from(categoriesToTree());
-  }
-  if (request.includes("* FROM brands")) {
-    return Array.from(brandsColletion);
-  }
-  if (request.includes("* FROM products")) {
-    return Array.from(productCollection);
-  }
-  if (request.includes("* FROM admins")) {
-    if (data?.username) {
-      return Array.from(
-        adminsCollection
-          .where("password", "==", data.password)
-          .where("name", "==", data.username)
-      );
-    }
-  }
-};
+}
 
-const deleteItemFrom = (collect: any, id: any) => {
-  const idx = collect.search((item: any) => item.id === id);
-  collect.splice(idx, 1);
-};
-
-const DELETE = (request: string, id: number) => {
-  if (request.includes("FROM allProducts WHERE id =")) {
-    deleteItemFrom(productCollection, id);
-    return Array.from(productCollection);
-  }
-  if (request.includes("FROM categories WHERE id =")) {
-    deleteItemFrom(categoriesCollection, id);
-    return Array.from(categoriesToTree());
-  }
-  if (request.includes("FROM brands WHERE id =")) {
-    deleteItemFrom(brandsColletion, id);
-    return Array.from(brandsColletion);
-  }
-};
-const UPDATE = (request: string, id: number, data: any) => {
-  if (request.includes("allProducts WHERE id =")) {
-    return productCollection
-      .map((product) => {
-        if (product.id === id) {
-          return product;
-        }
-        return product;
-      })
-      .all();
-  }
-  if (request.includes("categories WHERE id =")) {
-    // deleteItemFrom(categoriesCollection, id);
-    // return Array.from(categoriesToTree());
-  }
-  if (request.includes("brands WHERE id =")) {
-    // deleteItemFrom(brandsColletion, id);
-    // return Array.from(brandsColletion);
-  }
-};
-
-export { DELETE, SELECT, UPDATE };
+export {
+  getCollections
+}
