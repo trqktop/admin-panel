@@ -1,19 +1,11 @@
 const initialState = {
   events: {
     loading: true,
+    success: false,
     error: false,
   },
   store: {
     products: {
-      ctxId: 3,
-      events: {
-        loading: true,
-        success: false,
-        error: false,
-      },
-      data: null,
-    },
-    categories: {
       ctxId: 1,
       events: {
         loading: true,
@@ -22,7 +14,7 @@ const initialState = {
       },
       data: null,
     },
-    brands: {
+    categories: {
       ctxId: 2,
       events: {
         loading: true,
@@ -31,9 +23,16 @@ const initialState = {
       },
       data: null,
     },
+    brands: {
+      ctxId: 3,
+      events: {
+        loading: true,
+        success: false,
+        error: false,
+      },
+      data: null,
+    },
   },
-  requestHandlers: {},
 };
 
-
-export { initialState }
+export { initialState };

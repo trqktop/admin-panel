@@ -1,17 +1,21 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { initialState } from "../constants";
 import { getCollections } from "../data";
-const Context = createContext(initialState)
-
+const Context = createContext(initialState);
 
 const StoreContext = ({ children }: any) => {
-  const [state, setState] = useState(initialState)
+  const [state, setState] = useState(initialState);
+
   useEffect(() => {
-    const collection = getCollections()
+    const collection = getCollections();
     Object.entries(collection).forEach(([key, value], index) => {
       setState((p) => ({
-        ...p, store:
-        {
+        ...p,
+        events: {
+          ...p.events,
+          success: true,
+        },
+        store: {
           ...p.store,
           [key]: {
             ctxId: ++index,
@@ -19,15 +23,15 @@ const StoreContext = ({ children }: any) => {
             events: {
               loading: false,
               success: true,
-              error: false
-            }
-          }
-        }
-      }))
-    })
-  }, [])
+              error: false,
+            },
+          },
+        },
+      }));
+    });
+  }, []);
 
   return <Context.Provider value={state}>{children}</Context.Provider>;
-}
-export { Context }
-export default StoreContext
+};
+export { Context };
+export default StoreContext;
