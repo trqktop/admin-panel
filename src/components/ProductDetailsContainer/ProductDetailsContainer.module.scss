@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  min-height: fit-content;
+  justify-content: center;
+  background-color: #f3f3f3;
+  border-radius: 22px;
+  padding: 30px;
+}
+
+.itemDetailsContianer {
+  display: flex;
+  min-width: 100%;
+  flex-wrap: wrap;
+  border-radius: 24px;
+  overflow: scroll;
+  justify-content: space-between;
+}
+
+.aboutContainer {
+  max-width: 555px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: auto;
+}
+
+.desciption {
+  font-size: 24px;
+}
+
+.price {
+  font-size: 30px;
+  font-weight: 400;
+}
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  width: 444px;
+  margin: auto;
+}
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

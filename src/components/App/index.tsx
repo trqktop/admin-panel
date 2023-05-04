@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import StoreContainer from "../../containers/StoreContainer";
 import StoreProductsContainer from "../../containers/StoreProductsContainer";
 import StoreHomeContainer from "../../containers/StoreHomeContainer";
-import ProductPage from "../ProductPage";
+import ProductDetailsContainer from "../ProductDetailsContainer";
 import BasketContainer from "../../containers/BasketContainer";
 import FavoriteContainer from "../../containers/FavoriteContainer";
 
@@ -14,7 +14,7 @@ const App: React.FC = () => {
         <Route path="basket" element={<BasketContainer />} />
         <Route path="favorite" element={<FavoriteContainer />} />
         <Route path="category/:id" element={<StoreProductsContainer />} />
-        <Route path="product/:id" element={<ProductPage />} />
+        <Route path="product/:id" element={<ProductDetailsContainer />} />
       </Route>
       {/* <Route
             path="admin"

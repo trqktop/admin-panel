@@ -1,9 +1,8 @@
-import { Card, Image, Layout, List } from "antd";
-import Meta from "antd/es/card/Meta";
 import { useOutletContext } from "react-router-dom";
-import ProductQuantityControllPanel from "../../components/ProductQuantityControllPanel";
-import { Form, Input, Button } from "antd";
 import OrderForm from "../../components/OrderForm";
+import styles from "./BasketContainer.module.scss";
+import BasketProductItem from "../../components/BasketProductItem";
+
 const BasketContainer = () => {
   const [state]: any = useOutletContext();
   const { basketList } = state;
@@ -19,53 +18,22 @@ const BasketContainer = () => {
       0
     );
 
+    const renderItems = products.map((product: any, index: number) => (
+      <li key={index} className={styles.item}>
+        <BasketProductItem product={product} />
+      </li>
+    ));
+
     return (
-      <div>
-        <div>
-          <Layout
-            style={{
-              display: "flex",
-              minWidth: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <List
-              style={{ maxWidth: "100%" }}
-              dataSource={products}
-              grid={{ gutter: 16 }}
-              renderItem={(item: any) => (
-                <List.Item>
-                  <Card
-                    style={{ width: 240 }}
-                    actions={[<ProductQuantityControllPanel product={item} />]}
-                    cover={<img alt={item.name} src={item.image} />}
-                  >
-                    <Meta
-                      title={
-                        <ul>
-                          <li>{item.name}</li>
-                          <li>{item.price * item.quantity} $</li>
-                        </ul>
-                      }
-                      description="www.instagram.com"
-                    />
-                  </Card>
-                </List.Item>
-              )}
-            />
-            <div
-              style={{
-                display: "flex",
-                border: "1px red solid",
-                width: "400px",
-                gap: 10,
-              }}
-            >
-              <div>итого : {totalSumm}</div>
-              <div>всего товара : {totalQuantity}</div>
+      <div className={styles.container}>
+        <div className={styles.infoContainer}>
+          <ul className={styles.itemsContainer}>{renderItems}</ul>
+          <div className={styles.totalInfoContainer}>
+            <div className={styles.totalSumm}>Итого : {totalSumm}&thinsp;₽</div>
+            <div className={styles.totalQuantity}>
+              Всего товара : {totalQuantity}шт
             </div>
-          </Layout>
+          </div>
         </div>
         <OrderForm products={products} />
       </div>

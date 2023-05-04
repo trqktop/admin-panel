@@ -1,0 +1,10 @@
+.page {
+  min-height: 100vh;
+}
+.content {
+  display: flex;
+  justify-content: center;
+  background-color: gainsboro;
+  overflow: scroll;
+  padding: 50px;
+}

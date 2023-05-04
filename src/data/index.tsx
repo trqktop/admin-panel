@@ -18,57 +18,60 @@ const brandsDB = [
 const productsDB = [
   {
     id: 1,
-    name: "Майка белая",
+    name: "Футболка Nike Dri-FIT Academy",
     price: 10,
     category_id: 3,
     brand_id: 1,
     description: `Отличная майка, подойдет для любых случаев жизни. Подари себе две и никогда не думай, что надеть на завтра!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://basket-03.wb.ru/vol390/part39014/39014942/images/big/1.jpg",
   },
   {
     id: 2,
-    name: "Майка черная",
+    name: "Футболка M CMO T GRESIX/WHITE",
     price: 10,
     category_id: 3,
     brand_id: 2,
     description: `Отличная майка, подойдет для любых случаев жизни. Подари себе две и никогда не думай, что надеть на завтра!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://basket-03.wb.ru/vol303/part30300/30300816/images/big/4.jpg",
   },
   {
     id: 3,
-    name: "Штаны джинсовые",
+    name: "Штаны PUMA x MR DOODLE",
     price: 20,
     category_id: 4,
     brand_id: 3,
     description: `Штаны, которые подчеркнут все прелести твоей фигуры. Почувствуй себя спортсменом и выиграй гонку до метро!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image:
+      "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa/global/531019/01/bv/fnd/RUS/w/1000/h/1000/fmt/png",
   },
   {
     id: 4,
-    name: "Штаны спортивные",
+    name: "Брюки Adidas Originals",
     price: 30,
     category_id: 4,
     brand_id: 2,
     description: `Штаны, которые подчеркнут все прелести твоей фигуры. Почувствуй себя спортсменом и выиграй гонку до метро!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image:
+      "https://www.lookbuck.com/system/products/items/images/034/583/461/small/13552089UQ_12_F.JPG?1613649634",
   },
   {
     id: 5,
-    name: "Кеды красивые",
+    name: "кеды COURT ROYALE",
     price: 40,
     category_id: 5,
     brand_id: 1,
     description: `Кеды, которые сделают тебя неповторимым. Носи их на свидание, на работу или на вечеринку - они всегда будут к месту!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image:
+      "https://avatars.mds.yandex.net/get-yabs_performance/1404991/2a000001827308c6c6f055b74ff955035c81/huge",
   },
   {
     id: 6,
-    name: "Кеды обычные",
+    name: "Кеды adidas Originals SUPERSTAR",
     price: 40,
     category_id: 5,
     brand_id: 2,
     description: `Кеды, которые сделают тебя неповторимым. Носи их на свидание, на работу или на вечеринку - они всегда будут к месту!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://avatars.mds.yandex.net/get-yabs_performance/1413559/2a000001835986ab8abbcbfc20f849f9466e/big",
   },
   {
     id: 7,
@@ -77,7 +80,7 @@ const productsDB = [
     category_id: 6,
     brand_id: 3,
     description: `Кроссовки, которые не дадут тебе устать. Беги, прыгай, двигайся - они всегда будут за тобой!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://a.lmcdn.ru/img600x866/R/T/RTLAAX101501_15745291_1_v1.jpg",
   },
   {
     id: 8,
@@ -86,7 +89,7 @@ const productsDB = [
     category_id: 6,
     brand_id: 1,
     description: `Кроссовки, которые не дадут тебе устать. Беги, прыгай, двигайся - они всегда будут за тобой!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://a.lmcdn.ru/img600x866/R/T/RTLAAX101501_15745291_1_v1.jpg",
   },
   {
     id: 9,
@@ -95,7 +98,7 @@ const productsDB = [
     category_id: 7,
     brand_id: 3,
     description: `Боинки, которые дадут тебе силы на целый день. С ними ты сможешь поднять любой груз и сделать это с улыбкой на лице!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://a.lmcdn.ru/img600x866/R/T/RTLAAX101501_15745291_1_v1.jpg",
   },
   {
     id: 10,
@@ -104,7 +107,7 @@ const productsDB = [
     category_id: 7,
     brand_id: 2,
     description: `Боинки, которые дадут тебе силы на целый день. С ними ты сможешь поднять любой груз и сделать это с улыбкой на лице!`,
-    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    image: "https://a.lmcdn.ru/img600x866/R/T/RTLAAX101501_15745291_1_v1.jpg",
   },
 ];
 

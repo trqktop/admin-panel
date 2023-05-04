@@ -1,7 +1,8 @@
-import { List, Spin } from "antd";
-import { useCallback, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { Spin } from "antd";
+import { useContext } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
 import ProductCard from "../../components/ProductCard";
+import ProductList from "../../components/ProductList";
 import { Context } from "../../store";
 
 const productsCategoryFilter = (products: any, params: any) => {
@@ -13,19 +14,28 @@ const StoreProductsContainer = () => {
   const {
     store: { products },
   } = useContext(Context);
-
+  const [{ brandFilter }]: any = useOutletContext();
   if (products.events.success) {
     const filtred = productsCategoryFilter(products.data, params);
+
+    const productsWithBrandFilter = (products: any) => {
+      const result = products.filter((prod: any) => {
+        return brandFilter.some((brand: any) => brand === prod.brand_id);
+      });
+      return result;
+    };
+
+    const productsData = brandFilter.length
+      ? productsWithBrandFilter(filtred)
+      : filtred;
+
     return (
-      <List
-        grid={{
-          gutter: 16,
-        }}
-        dataSource={filtred}
-        renderItem={(item, index) => (
-          <List.Item key={index}>
-            <ProductCard product={item} />
-          </List.Item>
+      <ProductList
+        products={productsData}
+        render={(product: any, index: number) => (
+          <li key={index}>
+            <ProductCard product={product} />
+          </li>
         )}
       />
     );

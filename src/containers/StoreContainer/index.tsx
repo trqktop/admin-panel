@@ -1,43 +1,45 @@
-import { HeartOutlined, MenuOutlined } from "@ant-design/icons";
-import Layout, { Header, Content } from "antd/es/layout/layout";
-import Sider from "antd/es/layout/Sider";
-import { Link, Outlet } from "react-router-dom";
-import { Badge, Button, Space } from "antd";
+import Layout, { Content } from "antd/es/layout/layout";
+import styles from "./StoreContainer.module.scss";
+import { Outlet } from "react-router-dom";
 import DrawerMenu from "../../components/StoreDrawerMenu";
 import { useCallback, useState } from "react";
-import { ShoppingCartOutlined } from "@ant-design/icons";
-const StoreContainer = () => {
+import StoreHeader from "../../components/StoreHeader";
+import StoreBrandFilter from "../../components/StoreBrandFilter";
+
+const stateChanger = (prevState: any, product: any, listName: any) => {
+  const state = { ...prevState };
+  if (state[listName].length) {
+    const isProductFavorite = state[listName].find(
+      (item: any) => item.id === product.id
+    );
+    if (isProductFavorite) {
+      state[listName] = state[listName].filter(
+        (item: any) => item.id !== product.id
+      );
+      return state;
+    }
+    state[listName] = [...state[listName], product];
+    return state;
+  }
+  state[listName] = [...state[listName], product];
+  return state;
+};
+
+const StoreContainer: React.FC = () => {
   const [state, setState] = useState({
     isOpenedMenu: false,
     basketList: [],
     favoriteList: [],
+    brandFilter: [],
   });
 
   const openDrawerMenuHandler = useCallback(() => {
     setState((p: any) => ({ ...p, isOpenedMenu: true }));
   }, []);
+
   const closeDrawerMenuHandler = useCallback(() => {
     setState((p: any) => ({ ...p, isOpenedMenu: false }));
   }, []);
-
-  const stateChanger = (prevState: any, product: any, listName: any) => {
-    const state = { ...prevState };
-    if (state[listName].length) {
-      const isProductFavorite = state[listName].find(
-        (item: any) => item.id === product.id
-      );
-      if (isProductFavorite) {
-        state[listName] = state[listName].filter(
-          (item: any) => item.id !== product.id
-        );
-        return state;
-      }
-      state[listName] = [...state[listName], product];
-      return state;
-    }
-    state[listName] = [...state[listName], product];
-    return state;
-  };
 
   const fovoriteHandler = (e: any, product: any) => {
     e.stopPropagation();
@@ -95,43 +97,24 @@ const StoreContainer = () => {
     });
   };
 
+  const brandFilterHandler = (e: any) => {
+    setState((p: any) => ({ ...p, brandFilter: e }));
+  };
+
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Header style={{ justifyContent: "space-between", display: "flex " }}>
-        <Space style={{ margin: 10 }}>
-          <Link to="/">
-            <span>LOGO</span>
-          </Link>
-          <Button ghost onClick={openDrawerMenuHandler}>
-            <MenuOutlined />
-          </Button>
-        </Space>
-        <Space>
-          <Link to="/favorite">
-            <Badge count={state.favoriteList.length}>
-              <Button ghost icon={<HeartOutlined />} size="large" />
-            </Badge>
-          </Link>
-          <Link to="/basket">
-            <Badge count={state.basketList.length}>
-              <Button ghost icon={<ShoppingCartOutlined />} size="large" />
-            </Badge>
-          </Link>
-        </Space>
-      </Header>
-      <Layout>
+    <Layout className={styles.page}>
+      <StoreHeader
+        openDrawerMenuHandler={openDrawerMenuHandler}
+        favoriteListCount={state.favoriteList.length}
+        basketListCount={state.basketList.length}
+      />
+      <Layout className={styles.contentContainer}>
         <DrawerMenu
           isOpen={state.isOpenedMenu}
           onClose={closeDrawerMenuHandler}
         />
-        <Content
-          style={{
-            overflow: "scroll",
-            display: "flex",
-            flexDirection: "column",
-            maxWidth: "100vw",
-          }}
-        >
+        <StoreBrandFilter brandFilterHandler={brandFilterHandler} />
+        <Content className={styles.content}>
           <Outlet
             context={[
               state,
@@ -139,6 +122,7 @@ const StoreContainer = () => {
               basketListHandler,
               addItemToBacketListHandler,
               removeItemFromBacketListHandler,
+              brandFilterHandler,
             ]}
           />
         </Content>

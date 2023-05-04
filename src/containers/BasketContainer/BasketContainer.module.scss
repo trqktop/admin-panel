@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  margin: 33px;
+}
+
+.itemsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  max-width: 100%;
+  width: 700px;
+  margin: 0;
+  padding: 0;
+}
+.item {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.infoContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 50px;
+  width: 100%;
+}
+
+.totalInfoContainer {
+  display: flex;
+  max-width: 100%;
+  width: 600px;
+  height: 60vh;
+  justify-content: center;
+  flex-direction: column;
+  position: sticky;
+  top: 30px;
+  gap: 30px;
+  max-width: 100%;
+  background-color: #f3f3f3;
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.totalSumm {
+  font-size: 24px;
+}
+.totalQuantity {
+  font-size: 22px;
+}

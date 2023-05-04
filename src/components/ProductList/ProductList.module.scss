@@ -1,0 +1,10 @@
+.container {
+  padding: 11px;
+  gap: 24px;
+  list-style: none;
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 173px);
+  justify-content: center;
+  align-items: center;
+}

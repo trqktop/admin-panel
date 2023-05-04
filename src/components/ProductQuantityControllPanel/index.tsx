@@ -1,5 +1,5 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Space } from "antd";
+import { Button, Space, Typography } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
 import { useOutletContext } from "react-router-dom";
 
@@ -20,16 +20,26 @@ const ProductQuantityControllPanel = ({ product }: any) => {
     <ButtonGroup>
       {isToggle ? (
         <>
-          <Button onClick={() => removeItemFromBacketListHandler(product)}>
+          <Button
+            type="primary"
+            onClick={() => removeItemFromBacketListHandler(product)}
+          >
             <MinusOutlined />
           </Button>
-          <Button onClick={() => addItemToBacketListHandler(product)}>
+          <Space size="large">
+            <span style={{ padding: "10px", fontSize: "20px" }}>
+              {findQuantity()}
+            </span>
+          </Space>
+          <Button
+            type="primary"
+            onClick={() => addItemToBacketListHandler(product)}
+          >
             <PlusOutlined />
           </Button>
-          <Space>{findQuantity()}</Space>
         </>
       ) : (
-        <Button onClick={(e) => basketListHandler(e, product)}>
+        <Button type="primary" onClick={(e) => basketListHandler(e, product)}>
           Добавить корзину
         </Button>
       )}
