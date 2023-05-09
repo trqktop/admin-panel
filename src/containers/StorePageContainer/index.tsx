@@ -2,7 +2,7 @@ import Layout, { Content } from "antd/es/layout/layout";
 import styles from "./StoreContainer.module.scss";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import DrawerMenu from "../../components/StoreDrawerMenu";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import StoreHeader from "../../components/StoreHeader";
 import StoreBrandFilter from "../../components/StoreBrandFilter";
 import Service from "../../service";
@@ -152,6 +152,36 @@ const StorePageContainer: React.FC = () => {
   }
 
 
+
+
+  const pagination = useMemo(() => {
+    if (state.isPaginationVisible) {
+      if (state.isPaginationLoading) {
+        return <Spin />;
+      } else {
+        return (
+          <Pagination
+            size="small"
+            simple
+            current={state.page}
+            total={state.productLength}
+            pageSize={state.limit}
+            onChange={onChangePagination}
+          />
+        );
+      }
+    }
+    return null;
+  }, [
+    state.isPaginationVisible,
+    state.isPaginationLoading,
+    state.page,
+    state.productLength,
+    state.limit,
+  ]);
+
+
+  
   return (
     <Layout className={styles.page}>
       <StoreHeader
@@ -183,17 +213,7 @@ const StorePageContainer: React.FC = () => {
               clearBasketList,
             }}
           />
-          {
-            state.isPaginationVisible ?
-              state.isPaginationLoading ? <Spin /> : <Pagination
-                size="small"
-                simple
-                current={state.page}
-                total={state.productLength}
-                pageSize={state.limit}
-                onChange={onChangePagination}
-              /> : null
-          }
+          {pagination}
         </Content>
       </Layout>
     </Layout>
