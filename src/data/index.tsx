@@ -1,6 +1,6 @@
 import collect from "collect.js";
 
-const brandsDB = [
+const brands = [
   {
     id: 1,
     name: "Nike",
@@ -15,7 +15,7 @@ const brandsDB = [
   },
 ];
 
-const productsDB = [
+const products = [
   {
     id: 1,
     name: "Футболка Nike Dri-FIT Academy",
@@ -71,7 +71,8 @@ const productsDB = [
     category_id: 5,
     brand_id: 2,
     description: `Кеды, которые сделают тебя неповторимым. Носи их на свидание, на работу или на вечеринку - они всегда будут к месту!`,
-    image: "https://avatars.mds.yandex.net/get-yabs_performance/1413559/2a000001835986ab8abbcbfc20f849f9466e/big",
+    image:
+      "https://avatars.mds.yandex.net/get-yabs_performance/1413559/2a000001835986ab8abbcbfc20f849f9466e/big",
   },
   {
     id: 7,
@@ -109,11 +110,31 @@ const productsDB = [
     description: `Боинки, которые дадут тебе силы на целый день. С ними ты сможешь поднять любой груз и сделать это с улыбкой на лице!`,
     image: "https://a.lmcdn.ru/img600x866/R/T/RTLAAX101501_15745291_1_v1.jpg",
   },
+  {
+    id: 11,
+    name: "Боинки красивые",
+    price: 161,
+    category_id: 7,
+    brand_id: 2,
+    description: `Боинки, которые дадут тебе силы на целый день. С ними ты сможешь поднять любой груз и сделать это с улыбкой на лице!`,
+    image: "https://a.lmcdn.ru/img600x866/R/T/RTLAAX101501_15745291_1_v1.jpg",
+  },
 ];
 
-const admins = [{ id: 1, name: "a", password: "a", token: "s" }];
 
-const categoriesDB: any = [
+
+let idCounter = products.length + 1;
+for (let i = 0; i <= 4; i++) {
+  products.forEach((item, index) => {
+    const product = ({ ...item, id: idCounter })
+    products.push(product)
+    idCounter++;
+  })
+}
+
+
+const admins = [{ id: 1, name: "a", password: "a", token: "s" }];
+const categories: any = [
   { id: 1, name: "Одежда", parent_id: null },
   { id: 2, name: "Обувь", parent_id: null },
   { id: 3, name: "Майки", parent_id: 1 },
@@ -123,10 +144,8 @@ const categoriesDB: any = [
   { id: 7, name: "Ботинки", parent_id: 2 },
 ];
 
+
 const getCollections = () => {
-  const categories = collect(categoriesDB).toArray();
-  const products = collect(productsDB).toArray();
-  const brands = collect(brandsDB).toArray();
   return {
     products,
     categories,
@@ -134,4 +153,71 @@ const getCollections = () => {
   };
 };
 
-export { getCollections };
+const deleteItem = (collect: any, id: any) => {
+  const idx = collect.findIndex((item: any) => item.id === id);
+  collect.splice(idx, 1);
+};
+
+const deleteItemFromCollection = (nameCollection: any, id: any) => {
+  switch (nameCollection) {
+    case "products":
+      deleteItem(products, id);
+      return getCollections();
+    case "brands":
+      deleteItem(brands, id);
+      return getCollections();
+    case "categories":
+      deleteItem(categories, id);
+      return getCollections();
+  }
+};
+
+const updateItemFromCollection = (nameCollection: any, id: any) => {
+  console.log(nameCollection, id);
+};
+
+
+const getFragmentWithBrandAndCategory = (fragment: any) => {
+  return fragment.map((item: any) => {
+    const brand: any = brands.find((brand) => brand.id === item.brand_id);
+    const category = categories.find((category: any) => category.id === item.category_id);
+    return { ...item, brandName: brand.name, categoryName: category.name };
+  });
+};
+
+
+// SELECT * FROM products LIMIT 20 OFFSET 20;
+const SELECT = (ctx: string, LIMIT: number, OFFSET: any, currentCategory: any) => {
+  switch (ctx) {
+    case 'products':
+      const startIndex = OFFSET;
+      const endIndex = OFFSET + LIMIT;
+      let fragment: any;
+      if (currentCategory) {
+        fragment = collect(products).where('category_id', '==', currentCategory).toArray()
+        return getFragmentWithBrandAndCategory(fragment);
+      }
+      fragment = products.slice(startIndex, endIndex);
+      return getFragmentWithBrandAndCategory(fragment);
+    case 'brands':
+      return brands
+    case 'categories':
+      return categories
+    case 'count':
+      if (currentCategory) {
+        return collect(products).where('category_id', '==', currentCategory).toArray().length
+      }
+      return products.length
+  }
+}
+
+// SELECT * FROM products LIMIT 20;
+
+export {
+  getCollections,
+  deleteItemFromCollection,
+  updateItemFromCollection,
+  SELECT
+};
+
+

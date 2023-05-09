@@ -10,8 +10,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-    <StoreContext>
+    {/* <StoreContext> */}
       <App />
-    </StoreContext>
+    {/* </StoreContext> */}
   </BrowserRouter>
 );

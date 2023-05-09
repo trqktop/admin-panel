@@ -1,11 +1,15 @@
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import OrderForm from "../../components/OrderForm";
 import styles from "./BasketContainer.module.scss";
 import BasketProductItem from "../../components/BasketProductItem";
+import { Button, Modal } from "antd";
+import { useState } from "react";
 
 const BasketContainer = () => {
-  const [state]: any = useOutletContext();
+  const { state, clearBasketList }: any = useOutletContext();
   const { basketList } = state;
+  const [isOpen, setOpen] = useState(false);
+
 
   if (basketList.length) {
     const products = basketList;
@@ -24,6 +28,19 @@ const BasketContainer = () => {
       </li>
     ));
 
+    const openModalHandler = () => {
+      setOpen(true);
+    };
+
+    const closeModalHandler = () => {
+      setOpen(false);
+    };
+
+    const submitOrder = (e: any, form: any) => {
+      setOpen(false);
+      clearBasketList();
+    };
+
     return (
       <div className={styles.container}>
         <div className={styles.infoContainer}>
@@ -33,9 +50,18 @@ const BasketContainer = () => {
             <div className={styles.totalQuantity}>
               Всего товара : {totalQuantity}шт
             </div>
+            <Button
+              type="primary"
+              style={{ maxWidth: "fit-content" }}
+              onClick={openModalHandler}
+            >
+              Перейти к оформлению
+            </Button>
           </div>
         </div>
-        <OrderForm products={products} />
+        <Modal onCancel={closeModalHandler} open={isOpen} footer={[]}>
+          <OrderForm products={products} submitOrder={submitOrder} />
+        </Modal>
       </div>
     );
   }

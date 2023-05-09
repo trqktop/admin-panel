@@ -6,13 +6,12 @@ import { Context } from "../../store";
 import styles from "./ProductCard.module.scss";
 
 const ProductCard = ({ product }: any) => {
-  const navigate = useNavigate();
-  const [state, fovoriteHandler]: any = useOutletContext();
-  const { store } = useContext(Context);
-  const brands = store.brands;
-
-  const cardClickHanlder = (e: any) => {
-    navigate(`/product/${product.id}`);
+  const { state, favoriteHandler, onProductSelect }: any = useOutletContext();
+  const navigate = useNavigate()
+  const cardClickHandle = (e: any) => {
+    // navigate(`/product/${product.id}`);
+    onProductSelect(product)
+    navigate(`/product`);
   };
 
   const isActive = (list: Array<any>) => {
@@ -26,34 +25,35 @@ const ProductCard = ({ product }: any) => {
     return brand.name;
   };
 
-  const brand = renderBrand(brands.data, product);
+  // const brand = renderBrand(brands.data, product);
+
   return (
-    <div className={styles.card} onClick={cardClickHanlder}>
+    <div className={styles.card} onClick={cardClickHandle}>
       <div className={styles.imgContainer}>
         <img src={product.image} alt={product.name} className={styles.img} />
-      <button
-        className={styles.likeButton}
-        onClick={(e) => fovoriteHandler(e, product)}
-      >
-        {isActive(state.favoriteList) ? (
-          <HeartFilled
-            style={{
-              color: "#1677ff",
-            }}
-          />
-        ) : (
-          <HeartOutlined
-            style={{
-              color: "#1677ff",
-            }}
-          />
-        )}
-      </button>
+        <button
+          className={styles.likeButton}
+          onClick={(e) => favoriteHandler(e, product)}
+        >
+          {isActive(state.favoriteList) ? (
+            <HeartFilled
+              style={{
+                color: "#1677ff",
+              }}
+            />
+          ) : (
+            <HeartOutlined
+              style={{
+                color: "#1677ff",
+              }}
+            />
+          )}
+        </button>
       </div>
       <div className={styles.desciption}>
         <div style={{ display: "flex" }}>
           <div className={styles.price}>{product.price}&thinsp;₽ </div>
-          <div className={styles.brand}>{brand}</div>
+          <div className={styles.brand}>{product.brandName}</div>
         </div>
         <div className={styles.name}>{product.name}</div>
       </div>

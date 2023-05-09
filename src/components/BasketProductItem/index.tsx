@@ -1,4 +1,4 @@
-import ProductQuantityControllPanel from "../ProductQuantityControllPanel";
+import ProductQuantityControlPanel from "../ProductQuantityControlPanel";
 import styles from "./BasketProductItem.module.scss";
 const BasketProductItem = ({ product }: any) => {
   return (
@@ -9,7 +9,7 @@ const BasketProductItem = ({ product }: any) => {
           <h1 className={styles.name}>{product.name}</h1>
           <div className={styles.price}>{product.price}&thinsp;₽</div>
         </div>
-        <ProductQuantityControllPanel product={product} />
+        <ProductQuantityControlPanel product={product} />
       </div>
     </div>
   );

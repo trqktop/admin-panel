@@ -1,16 +1,14 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Space, Typography } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
-const ProductQuantityControllPanel = ({ product }: any) => {
-  const [
-    state,
-    ,
-    basketListHandler,
-    addItemToBacketListHandler,
-    removeItemFromBacketListHandler,
-  ]: any = useOutletContext();
+const ProductQuantityControlPanel = ({ product, isBasketLink }: any) => {
+  const { state, basketListHandler,
+    addItemToBasketListHandler,
+    removeItemFromBasketListHandler }: any = useOutletContext()
+
+
 
   const isToggle = state.basketList.some((item: any) => item.id === product.id);
   const findQuantity = () =>
@@ -22,7 +20,7 @@ const ProductQuantityControllPanel = ({ product }: any) => {
         <>
           <Button
             type="primary"
-            onClick={() => removeItemFromBacketListHandler(product)}
+            onClick={() => removeItemFromBasketListHandler(product)}
           >
             <MinusOutlined />
           </Button>
@@ -33,7 +31,7 @@ const ProductQuantityControllPanel = ({ product }: any) => {
           </Space>
           <Button
             type="primary"
-            onClick={() => addItemToBacketListHandler(product)}
+            onClick={() => addItemToBasketListHandler(product)}
           >
             <PlusOutlined />
           </Button>
@@ -43,7 +41,13 @@ const ProductQuantityControllPanel = ({ product }: any) => {
           Добавить корзину
         </Button>
       )}
+      {isToggle && isBasketLink ? (
+        <Link to="/basket">
+          <Button type="primary">Перейти к корзине</Button>
+        </Link>
+      ) : null}
     </ButtonGroup>
   );
 };
-export default ProductQuantityControllPanel;
+
+export default ProductQuantityControlPanel;

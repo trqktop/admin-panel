@@ -1,6 +1,6 @@
 import { Drawer } from "antd";
 import StoreMenu from "../StoreMenu";
-const DrawerMenu = ({ isOpen, onClose }: any) => {
+const DrawerMenu = ({ isOpen, onClose, categories, onChangeCurrentCategory }: any) => {
   return (
     <Drawer
       placement={"left"}
@@ -8,7 +8,7 @@ const DrawerMenu = ({ isOpen, onClose }: any) => {
       onClose={onClose}
       open={isOpen}
     >
-      <StoreMenu />
+      <StoreMenu categories={categories} onChangeCurrentCategory={onChangeCurrentCategory} />
     </Drawer>
   );
 };

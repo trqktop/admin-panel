@@ -95,35 +95,31 @@ function transformCategoriesToMenu(categories: Category[]): MenuItem[] {
   return items;
 }
 
-const StoreMenu = () => {
-  const {
-    store: {
-      categories: { events, data },
-    },
-  }: any = useContext(Context);
-  const navigate = useNavigate();
+const StoreMenu = ({ categories, onChangeCurrentCategory }: any) => {
+  // const {
+  //   store: {
+  //     categories: { events, data },
+  //   },
+  // }: any = useContext(Context);
 
   const onClick: MenuProps["onClick"] = useCallback(
     (e: MenuDataItem) => {
-      navigate(`category/${e.key}`);
-    },
-    [navigate]
+      onChangeCurrentCategory(e.key)
+    }, []
   );
 
-  if (events.success) {
-    const items = transformCategoriesToMenu(data);
-    return (
-      <>
-        <Menu
-          onClick={onClick}
-          style={{ width: 256 }}
-          mode="inline"
-          items={items}
-        />
-      </>
-    );
-  }
-  return null;
+
+  const items = transformCategoriesToMenu(categories);
+  return (
+    <>
+      <Menu
+        onClick={onClick}
+        style={{ width: 256 }}
+        mode="inline"
+        items={items}
+      />
+    </>
+  );
 };
 
 export default StoreMenu;

@@ -1,12 +1,13 @@
 import { Form, Input, Button, Typography } from "antd";
 import styles from "./OrderForm.module.scss";
-const OrderForm = ({ products }: any) => {
-
+const OrderForm = ({ products, submitOrder }: any) => {
   return (
     <Form
       labelCol={{ span: 5 }}
       wrapperCol={{ span: 12 }}
-      onFinish={(e: any) => console.log(e, products)}
+      onFinish={(e: any) => {
+        submitOrder(e, products);
+      }}
       className={styles.container}
     >
       <Typography.Title className={styles.title} level={4}>

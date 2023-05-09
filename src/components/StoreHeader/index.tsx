@@ -10,12 +10,12 @@ const StoreHeader = ({
   openDrawerMenuHandler,
   favoriteListCount,
   basketListCount,
-  children,
+  setPaginationVisible
 }: any) => {
   return (
     <header className={styles.header}>
       <Space align="center" className={styles.topContainer}>
-        <Link to="/">
+        <Link to="/" onClick={setPaginationVisible}>
           <Typography.Title className={styles.logo} level={2}>
             e-commerce
           </Typography.Title>
