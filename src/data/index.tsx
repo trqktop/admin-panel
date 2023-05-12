@@ -342,17 +342,27 @@ const SELECT = (
     case 'brands':
       const brands = collect.joinedBrands()
       return { items: brands, length: brands.length }
-      // const products = collect.joinedProducts()
-      // const offsetProducts = products.slice(startIndex, endIndex)
-      // return { items: offsetProducts, length: products.length }
-      break
+    // const products = collect.joinedProducts()
+    // const offsetProducts = products.slice(startIndex, endIndex)
+    // return { items: offsetProducts, length: products.length }
     case 'categories':
       // const products = collect.joinedProducts()
       // const offsetProducts = products.slice(startIndex, endIndex)
       // return { items: offsetProducts, length: products.length }
       const categories = collect.joinedCategories()
       return { items: categories, length: categories.length }
+
+    case 'login':
+      const idx: any = collectJS(admins).search(
+        ({ name, password }) =>
+          data.username === name && password === data.password
+      );
+      if (idx > -1) {
+        return { items: admins[idx], length: admins.length };
+      }
+      return { items: "error", length: "error" };
   }
+
 
   // return collect.joinedProducts()
 

@@ -5,17 +5,19 @@ import Form from "antd/lib/form";
 import { useNavigate } from "react-router-dom";
 // import { OptionsType } from "../../server";
 import Service from "../../../service";
-
 const AdminLoginForm: React.FC = () => {
   const navigate = useNavigate();
 
   const loginHandler = async (data: FormData) => {
     const getToken = async (url: string) => {
       const service = new Service();
-      service.options({ url });
-      const user:any = await service.post(data);
-      if (user.token) {
-        localStorage.setItem("token", user.token);
+      const options = {
+        url,
+      }
+      service.options(options);
+      const { items: { token } }: any = await service.post(data);
+      if (token) {
+        localStorage.setItem("token", token);
         navigate("admin");
       }
     };
@@ -62,7 +64,7 @@ const AdminLoginForm: React.FC = () => {
           name="remember"
           valuePropName="checked"
           noStyle
-          // validateStatus={validateStatus}
+        // validateStatus={validateStatus}
         >
           <Checkbox>Remember me</Checkbox>
         </Form.Item>

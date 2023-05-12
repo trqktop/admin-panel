@@ -2,12 +2,13 @@ import { useOutletContext } from "react-router-dom";
 import ProductCard from "../../../components/store/ProductCard";
 import ProductList from "../../../components/store/ProductList";
 import { Spin } from "antd";
+import styles from './FavoriteContainer.module.scss'
 
 const FavoriteContainer = () => {
   const { state: { favoriteList } }: any = useOutletContext();
   if (favoriteList.length)
     return (
-      <ul>
+      <ul className={styles.container}>
         {favoriteList.map((product: any, index: any) =>
         (
           <li key={index}>

@@ -45,6 +45,7 @@ export interface AppStoreState {
   brandFilter: any[]
   basketList: any[]
   isOpenedDrawerMenu: boolean
+  isLoginFormVisible: boolean
   // Add the rest of the state properties here if needed
 }
 interface FetchOptions {
@@ -74,7 +75,7 @@ const StorePageContainer: React.FC = () => {
     // isCategoriesLoading: true,
     // isBrandsLoading: true,
     // isPaginationVisible: true,
-    // isLoginFormVisible: false,
+    isLoginFormVisible: false,
     // currentCategory: null,
 
     brands: {
@@ -145,63 +146,63 @@ const StorePageContainer: React.FC = () => {
 
 
 
-  // const basketListHandler = useCallback((e: any, product: any) => {
-  //   const order = { ...product, quantity: 1 };
-  //   setState((p: any) => ({ ...p, basketList: [...p.basketList, order] }));
-  // }, []);
+  const basketListHandler = useCallback((e: any, product: any) => {
+    const order = { ...product, quantity: 1 };
+    setState((p: any) => ({ ...p, basketList: [...p.basketList, order] }));
+  }, []);
 
-  // const addItemToBasketListHandler = useCallback((product: any) => {
-  //   setState((p: any) => {
-  //     const index = p.basketList.findIndex(
-  //       (item: any) => item.id === product.id
-  //     );
-  //     if (index !== -1) {
-  //       const updatedItem = {
-  //         ...p.basketList[index],
-  //         quantity: p.basketList[index].quantity + 1,
-  //       };
-  //       const updatedBasketList = [
-  //         ...p.basketList.slice(0, index),
-  //         updatedItem,
-  //         ...p.basketList.slice(index + 1),
-  //       ];
-  //       return { ...p, basketList: updatedBasketList };
-  //     }
-  //     return { ...p };
-  //   });
-  // }, []);
+  const addItemToBasketListHandler = useCallback((product: any) => {
+    setState((p: any) => {
+      const index = p.basketList.findIndex(
+        (item: any) => item.id === product.id
+      );
+      if (index !== -1) {
+        const updatedItem = {
+          ...p.basketList[index],
+          quantity: p.basketList[index].quantity + 1,
+        };
+        const updatedBasketList = [
+          ...p.basketList.slice(0, index),
+          updatedItem,
+          ...p.basketList.slice(index + 1),
+        ];
+        return { ...p, basketList: updatedBasketList };
+      }
+      return { ...p };
+    });
+  }, []);
 
-  // const removeItemFromBasketListHandler = useCallback((product: any) => {
-  //   setState((p: any) => {
-  //     const idx = p.basketList.findIndex((item: any) => item.id === product.id);
-  //     if (idx > -1) {
-  //       const currProduct = p.basketList[idx];
-  //       if (currProduct.quantity <= 1) {
-  //         const updatedBasketList = [
-  //           ...p.basketList.slice(0, idx),
-  //           ...p.basketList.slice(idx + 1),
-  //         ];
-  //         return { ...p, basketList: updatedBasketList };
-  //       } else {
-  //         const updatedItem = {
-  //           ...p.basketList[idx],
-  //           quantity: currProduct.quantity - 1,
-  //         };
-  //         const updatedBasketList = [
-  //           ...p.basketList.slice(0, idx),
-  //           updatedItem,
-  //           ...p.basketList.slice(idx + 1),
-  //         ];
-  //         return { ...p, basketList: updatedBasketList };
-  //       }
-  //     }
-  //     return { ...p };
-  //   });
-  // }, []);
+  const removeItemFromBasketListHandler = useCallback((product: any) => {
+    setState((p: any) => {
+      const idx = p.basketList.findIndex((item: any) => item.id === product.id);
+      if (idx > -1) {
+        const currProduct = p.basketList[idx];
+        if (currProduct.quantity <= 1) {
+          const updatedBasketList = [
+            ...p.basketList.slice(0, idx),
+            ...p.basketList.slice(idx + 1),
+          ];
+          return { ...p, basketList: updatedBasketList };
+        } else {
+          const updatedItem = {
+            ...p.basketList[idx],
+            quantity: currProduct.quantity - 1,
+          };
+          const updatedBasketList = [
+            ...p.basketList.slice(0, idx),
+            updatedItem,
+            ...p.basketList.slice(idx + 1),
+          ];
+          return { ...p, basketList: updatedBasketList };
+        }
+      }
+      return { ...p };
+    });
+  }, []);
 
-  // const clearBasketList = useCallback(() => {
-  //   setState((p) => ({ ...p, basketList: [] }));
-  // }, []);
+  const clearBasketList = useCallback(() => {
+    setState((p) => ({ ...p, basketList: [] }));
+  }, []);
 
   // useEffect(() => {
   //   const getProductsLength = async (url: string) => {
@@ -359,13 +360,13 @@ const StorePageContainer: React.FC = () => {
   //   state.limit,
   // ]);
 
-  // const closeAdminLoginModal = () => {
-  //   setState((p) => ({ ...p, isLoginFormVisible: false }));
-  // };
+  const closeAdminLoginModal = () => {
+    setState((p) => ({ ...p, isLoginFormVisible: false }));
+  };
 
-  // const openAdminLoginModal = () => {
-  //   setState((p) => ({ ...p, isLoginFormVisible: true }));
-  // };
+  const openAdminLoginModal = () => {
+    setState((p) => ({ ...p, isLoginFormVisible: true }));
+  };
 
 
   const openDrawerMenuHandler = useCallback(() => {
@@ -385,9 +386,12 @@ const StorePageContainer: React.FC = () => {
     state,
     favoriteHandler,
     onChangePagination,
-    onChangeProductsCurrentCategory
+    onChangeProductsCurrentCategory,
+    basketListHandler,
+    addItemToBasketListHandler,
+    removeItemFromBasketListHandler,
   }
-  console.log(state)
+
   return (
     <Layout className={styles.page}>
       <StoreHeader
@@ -404,7 +408,7 @@ const StorePageContainer: React.FC = () => {
           categories={state.categories}
         // onChange={onChangeProductsCurrentCategory}
         />
-        {/*    <Space direction="horizontal" style={{ justifyContent: "flex-end" }}>
+        <Space direction="horizontal" style={{ justifyContent: "flex-end" }}>
           <Button onClick={openAdminLoginModal}>admin</Button>
         </Space>
         <Modal
@@ -418,7 +422,7 @@ const StorePageContainer: React.FC = () => {
           ]}
         >
           <AdminLoginForm></AdminLoginForm>
-        </Modal>*/}
+        </Modal>
         <Content className={styles.content}>
           <Outlet
             // context={{
