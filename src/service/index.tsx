@@ -1,87 +1,63 @@
-import { SELECT } from '../data'
-
-// const service: any = {
-//     link: '',
-//     limit: 20,
-//     offset: 0,
-//     page: 1,
-//     options(url: string, page: number) {
-//         this.link = url;
-//         this.page = page;
-//         this.offset = (page - 1) * this.limit
-//         this.data = this.initDataCtx()
-//     },
-//     get() {
-//         return new Promise((res, rej) => {
-//             setTimeout(() => {
-//                 res(this.data);
-//             }, 1000 * Math.random());
-//         });
-//     },
-//     post() { },
-//     put() { },
-//     delete() { },
-//     initDataCtx() {
-//         return SELECT(this.link, this.limit, this.offset)
-//         // switch (this.link) {
-//         //     case 'categories':
-//         //         return 'categories'
-//         //     case 'brands':
-//         //         return 'brands'
-//         //     case 'products':
-//         //         return SELECT(this.link, 20, 0)
-//         // }
-//     }
-// }
-
+import { SELECT, DELETE, UPDATE, INSERT } from "../data";
 class Service {
-  link: string;
-  limit: number;
-  offset: number;
-  page: number;
+  url: string;
+  limit: any;
+  offset: any;
+  page: any;
   data: any;
-  currentCategory: any
-
+  postData: any;
+  currentCategory: any;
   constructor() {
-    this.link = '';
+    this.url = "";
     this.limit = 20;
     this.offset = 0;
     this.page = 0;
     this.data = null;
-    this.currentCategory = null
+    this.postData = null;
+    this.currentCategory = null;
   }
 
-  options(url: string, page: number, limit: number, currentCategory: any) {
-    this.limit = limit
-    this.link = url;
+  options({ url, page, limit, currentCategory }: any) {
+    this.limit = limit;
+    this.url = url;
     this.page = page;
-    this.currentCategory = currentCategory
+    this.currentCategory = currentCategory;
     this.offset = (page - 1) * this.limit;
-    this.data = this.initDataCtx();
   }
 
   async get() {
-    await new Promise((res) => setTimeout(res, 3000 * Math.random()));
-    return this.data;
+    await new Promise((res) => setTimeout(res, 1000 * Math.random()));
+    return this.initDataCtx();
   }
 
-  post() { }
+  async post(data: any) {
+    this.postData = data;
+    INSERT(data, this.url);
+    await new Promise((res) => setTimeout(res, 1000 * Math.random()));
+    return this.initDataCtx();
+  }
 
-  put() { }
+  async patch({ data, id }: any) {
+    UPDATE(data, id, this.url);
+    await new Promise((res) => setTimeout(res, 1000 * Math.random()));
+    return this.initDataCtx();
+  }
 
-  delete() { }
+  async delete(data: any) {
+    DELETE(data);
+    await new Promise((res) => setTimeout(res, 1000 * Math.random()));
+    return this.initDataCtx();
+  }
 
   initDataCtx() {
-    return SELECT(this.link, this.limit, this.offset, this.currentCategory)
-    // switch (this.link) {
-    //     case 'categories':
-    //         return 'categories'
-    //     case 'brands':
-    //         return 'brands'
-    //     case 'products':
-    //         return SELECT(this.link, 20, 0)
-    // }
+    return SELECT(
+      this.url,
+      this.limit,
+      this.offset,
+      this.currentCategory,
+      this.postData
+    );
   }
 }
-export default Service
 
+export default Service;

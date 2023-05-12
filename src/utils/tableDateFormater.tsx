@@ -62,4 +62,12 @@ const tableDateFormater = (
   ];
 };
 
+
+export const getFormatedData = (data: any) => {
+  return data.map((item: any) => ({ ...item, key: item.id }));
+};
+
+
+
+
 export default tableDateFormater;

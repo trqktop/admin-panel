@@ -1,12 +1,15 @@
 import { Route, Routes } from "react-router-dom";
-import StorePageContainer from "../../containers/StorePageContainer";
-import StoreCategories from "../StoreCategories";
-import StoreHome from "../StoreHome";
-import ProductDetailsContainer from "../ProductDetailsContainer";
-import BasketContainer from "../../containers/BasketContainer";
-import FavoriteContainer from "../../containers/FavoriteContainer";
-import AdminPageContainer from "../../containers/AdminPageContainer";
-import AdminSiderTableContainer from "../../containers/AdminSiderTabContainer";
+import StorePageContainer from "../../containers/store/StorePageContainer";
+import StoreCategories from "../store/StoreCategories";
+import StoreHome from "../store/StoreHome";
+import ProductDetailsContainer from "../store/ProductDetailsContainer";
+import BasketContainer from "../../containers/store/BasketContainer";
+import FavoriteContainer from "../../containers/store/FavoriteContainer";
+import AdminPageContainer from "../../containers/admin/AdminPageContainer";
+import AdminSiderTableBrandsContainer from "../../containers/admin/AdminSiderTableBrandsContainer";
+import AdminSiderTableCategoriesContainer from "../../containers/admin/AdminSiderTableCategoriesContainer";
+import AdminSiderTableProductsContainer from "../../containers/admin/AdminSiderTableProductsContainer";
+import AdminSiderTableOrdersContainer from "../../containers/admin/AdminSiderTableOrdersContainer";
 
 const RouteProtector: any = ({ children }: any): any => {
   const token: any = localStorage.getItem("token");
@@ -24,19 +27,23 @@ const App: React.FC = () => {
         <Route path="category/:id" element={<StoreCategories />} />
         <Route path="favorite" element={<FavoriteContainer />} />
         <Route path="basket" element={<BasketContainer />} />
-        <Route path="product" element={<ProductDetailsContainer />} />
+        <Route path="product/:id" element={<ProductDetailsContainer />} />
       </Route>
       <Route
         path="admin"
         element={
-          // <RouteProtector>
-          <AdminPageContainer />
-          // </RouteProtector>
+          <RouteProtector>
+            <AdminPageContainer />
+          </RouteProtector>
         }
       >
-        <Route path="products" element={<AdminSiderTableContainer />} />
-        <Route path="categories" element={<AdminSiderTableContainer />} />
-        <Route path="brands" element={<AdminSiderTableContainer />} />
+        <Route path="orders" element={<AdminSiderTableOrdersContainer />} />
+        <Route path="products" element={<AdminSiderTableProductsContainer />} />
+        <Route
+          path="categories"
+          element={<AdminSiderTableCategoriesContainer />}
+        />
+        <Route path="brands" element={<AdminSiderTableBrandsContainer />} />
       </Route>
     </Routes>
   );

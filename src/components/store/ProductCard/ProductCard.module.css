@@ -1,0 +1,82 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  max-width: 197px;
+  max-height: 100%;
+  transition: all 0.1s linear;
+  cursor: pointer;
+}
+.card:hover {
+  filter: contrast(110%);
+}
+
+.imgContainer {
+  display: flex;
+  max-width: 173px;
+  height: 250px;
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+}
+.imgContainer .img {
+  margin: auto;
+  max-width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 100%;
+}
+
+.likeButton {
+  all: unset;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.desciption {
+  display: flex;
+  flex-direction: column;
+  max-width: 173px;
+  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
+}
+.desciption .price {
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26px;
+  margin: 0 4px 2px 6px;
+  padding: 0 6px;
+  color: rgb(255, 255, 255);
+  background: linear-gradient(90deg, rgb(35, 114, 255) 3%, rgb(41, 153, 255) 97%);
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
+.brand {
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26px;
+  margin: 0 4px 2px 6px;
+  padding: 0 6px;
+  color: rgb(255, 255, 255);
+  background: linear-gradient(90deg, rgb(116, 140, 181) 3%, rgb(41, 153, 255) 97%);
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
+.name {
+  display: block;
+  max-width: 100%;
+  margin: 10px 4px 2px 0;
+  padding: 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}/*# sourceMappingURL=ProductCard.module.css.map */

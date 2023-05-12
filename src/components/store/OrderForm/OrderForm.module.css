@@ -1,0 +1,13 @@
+.container {
+  background-color: #f3f3f3;
+  border-radius: 22px;
+  max-width: 100%;
+  width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  text-align: center;
+}/*# sourceMappingURL=OrderForm.module.css.map */

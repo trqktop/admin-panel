@@ -23,7 +23,7 @@ const getMenuItems = (
     icon: <UserOutlined />,
     label: "Заказы",
     onClick: (e: any) => {
-      navigate(""); //orders
+      navigate("orders"); //orders
       selectedKey.current = 2;
     },
   },
