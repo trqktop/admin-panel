@@ -330,12 +330,12 @@ const SELECT = (
   const endIndex = OFFSET + LIMIT;
   switch (ctx) {
     case 'products':
-      if (currentCategory) {
+      const changeCategory = currentCategory
+      if (changeCategory) {
         const products = collect.filterCategoryProducts(currentCategory)
         const offsetProducts = products.slice(startIndex, endIndex)
         return { items: offsetProducts, length: products.length }
       }
-
       const products = collect.joinedProducts()
       const offsetProducts = products.slice(startIndex, endIndex)
       return { items: offsetProducts, length: products.length }
