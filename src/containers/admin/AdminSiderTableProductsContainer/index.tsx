@@ -7,13 +7,9 @@ import { OutletContextType } from "../AdminPageContainer";
 const AdminSiderTableProductsContainer = () => {
   const {
     state,
-    // tabData,
-    // onChangePagination,
-    // onDelete,
     openUpdateModal,
     openCreateModal,
     onDeleteItem
-    // openCreateItemModal,
   }: any = useOutletContext<OutletContextType>();
   // const state = tabData.products;
   const products = state.products

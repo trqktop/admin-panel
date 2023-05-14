@@ -19,7 +19,7 @@ const CategoriesUpdateForm = ({ category, brands, categories, onSubmit, update }
         <Form.Item label="name" name="name" >
           <Input />
         </Form.Item>
-        {/* <Form.Item label="parent" name="parent_id">
+        <Form.Item label="parent" name="parent_id">
           <Select
             style={{ width: "100%" }}
             options={categories.map((category: any) => ({
@@ -27,7 +27,7 @@ const CategoriesUpdateForm = ({ category, brands, categories, onSubmit, update }
               value: category.id,
             }))}
           />
-        </Form.Item> */}
+        </Form.Item>
       </Form>
     </>
   );

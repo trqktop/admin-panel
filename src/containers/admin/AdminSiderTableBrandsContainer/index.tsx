@@ -18,7 +18,7 @@ const AdminSiderTableBrandsContainer: React.FC = () => {
         <Button onClick={() => openUpdateModal({ record, type: 'brands' })} >
           update
         </Button>
-        <Button onClick={() => onDeleteItem({ record, type: 'brands' })} >
+        <Button onClick={() => onDeleteItem({ record, type: 'brands' })} disabled={record.products > 0} >
           delete
         </Button>
       </ButtonGroup>

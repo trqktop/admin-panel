@@ -390,6 +390,7 @@ const StorePageContainer: React.FC = () => {
     basketListHandler,
     addItemToBasketListHandler,
     removeItemFromBasketListHandler,
+    clearBasketList
   }
 
   return (

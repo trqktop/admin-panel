@@ -6,7 +6,8 @@ import { Option } from "antd/es/mentions";
 
 const ProductsUpdateForm = ({ product, brands, categories, onSubmit, update }: any) => {
 
-  const categoriesChildren = categories.map((category: any) => category.children).flat()
+  const categoriesChildren = categories.map((category: any) => category.children).flat().filter((category: any) => category)
+  console.log(categoriesChildren)
   const initialValues = update ? ({
     name: product.name,
     price: product.price,
@@ -16,6 +17,13 @@ const ProductsUpdateForm = ({ product, brands, categories, onSubmit, update }: a
     description: product.description
   }) : null
   const key = update ? product.id : null
+
+  const getSelectOptions = (): any => {
+    return categoriesChildren.map((category: any) => ({
+      label: category.name,
+      value: category.id,
+    }))
+  }
 
   return (
     <Form
@@ -43,10 +51,7 @@ const ProductsUpdateForm = ({ product, brands, categories, onSubmit, update }: a
       </Form.Item>
       <Form.Item label="category" name="category_id" >
         <Select
-          options={categoriesChildren.map((category: any) => ({
-            label: category.name,
-            value: category.id,
-          }))}
+          options={getSelectOptions()}
         />
       </Form.Item>
       {/* <Form.Item label="Категория" name="category">

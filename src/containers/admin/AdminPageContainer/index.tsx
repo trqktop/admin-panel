@@ -338,6 +338,7 @@ const AdminPageContainer: React.FC = () => {
     service.options(options);
     try {
       const result = await service.post(data);
+      console.log(result)
       setState((p) => ({
         ...p,
         [options.url]: {

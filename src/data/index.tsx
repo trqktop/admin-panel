@@ -411,8 +411,8 @@ const UPDATE = (url: any, limit: any, offset: any, currentCategory: any, data: a
     case 'categories':
       const categoryIdx = categories.findIndex((category: any) => category.id === id)
       const updatedCategory = { ...categories[categoryIdx], ...data }
+      console.log(updatedCategory)
       categories.splice(categoryIdx, 1, updatedCategory)
-      console.log(categories)
       return SELECT(url, limit, offset, currentCategory, updatedCategory)
   }
 };
@@ -429,10 +429,14 @@ const INSERT = (type: any, limit: any, offset: any, currentCategory: any, data: 
       return SELECT(type, limit, offset, currentCategory, { ...data, id: brandId })
     case 'categories':
       const categoryId = categories.length + 1
-      categories.push({ ...data, id: categoryId, parent_id: null })
+      categories.push({ ...data, id: categoryId, parent_id: data.parent_id ?? null })
       return SELECT(type, limit, offset, currentCategory, { ...data, id: categoryId })
+    case 'order':
+      const customerId = customers.length + 1
+      customers.push({ ...data.customer, id: customerId })
+      orders.push({ id: orders.length + 1, customer_id: customerId, products: data.products, summ: data.summ })
+      console.log(orders, customers)
   }
-
 };
 
 export { SELECT, DELETE, UPDATE, INSERT };

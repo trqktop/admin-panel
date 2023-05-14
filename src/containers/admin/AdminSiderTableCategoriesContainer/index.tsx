@@ -8,68 +8,13 @@ const AdminSiderTableCategoriesContainer = () => {
   const categories = state.categories
   const { name, items, isLoaded, page, length, limit, currentCategory } = categories
 
-  //   {
-  //     "id": 1,
-  //     "name": "Одежда",
-  //     "children": [
-  //         {
-  //             "id": 3,
-  //             "name": "Майки",
-  //             "products": 64
-  //         },
-  //         {
-  //             "id": 4,
-  //             "name": "Штаны",
-  //             "products": 64
-  //         }
-  //     ],
-  //     "products": 0
-  // }
-
-
-
-  // const { tabData, onUpdate, onDelete, openCreateItemModal }: any =
-  //   useOutletContext();
-  // const state = tabData.categories;
-
-  // const getFormatedData = (data: any) => {
-  //   let isChildren = false;
-  //   let result: any = [];
-  //   const children: any = [];
-  //   const parents: any = [];
-  //   const formater = (item: any) => ({ ...item, key: item.id });
-  //   data.forEach((item: any) => {
-  //     const formated = formater(item);
-  //     if (item.parent_id) {
-  //       isChildren = true;
-  //       children.push(formated);
-  //     } else {
-  //       parents.push(formated);
-  //     }
-  //   });
-
-  //   result = parents;
-  //   if (isChildren) {
-  //     isChildren = false;
-  //     result = parents.map((parent: any) => {
-  //       let newParent = parent;
-  //       const filteredChild = children.filter(
-  //         (child: any) => child.parent_id === parent.id
-  //       );
-  //       newParent.children = filteredChild;
-  //       return newParent;
-  //     });
-  //   }
-  //   return result;
-  // };
-
   const renderActions = (record: any) => {
     return (
       <ButtonGroup>
         <Button onClick={() => openUpdateModal({ record, type: 'categories' })}>
           update
         </Button>
-        <Button onClick={() => onDeleteItem({ record, type: 'categories' })}>
+        <Button disabled={record.products > 0} onClick={() => onDeleteItem({ record, type: 'categories' })}>
           delete
         </Button>
       </ButtonGroup>
