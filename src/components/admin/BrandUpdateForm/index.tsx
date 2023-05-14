@@ -1,19 +1,21 @@
 import { Input } from "antd";
 import Form from "antd/lib/form";
 
-const BrandUpdateForm = ({ state, onSubmit, create, update }: any) => {
-  const brand: any = state.openedItemData.record;
-  const id: any = brand.id;
-  const initialValues: any = { name: brand.name };
+const BrandUpdateForm = ({ brand, brands, categories, update, onSubmit }: any) => {
+  const initialValues = update ? ({
+    name: brand.name,
+  }) : null
+  const key = update ? brand.id : null
   return (
     <Form
-      key={state.openedItemData.record.id}
-      id={update ? "updateItem" : "createItem"}
+      key={key}
+      id={update ? 'updateItem' : 'createItem'}
       onFinish={onSubmit}
-      initialValues={initialValues}
+      initialValues={{ ...initialValues }}
+    // initialValues={initialValues}
     >
       <Form.Item label="name" name="name">
-        <Input value={id} />
+        <Input />
       </Form.Item>
     </Form>
   );

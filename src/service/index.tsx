@@ -32,19 +32,30 @@ class Service {
 
   async post(data: any) {
     this.postData = data;
-    INSERT(data, this.url);
+    INSERT(this.url,
+      this.limit,
+      this.offset,
+      this.currentCategory,
+      data);
     await new Promise((res) => setTimeout(res, 1000 * Math.random()));
     return this.initDataCtx();
   }
 
   async patch({ data, id }: any) {
-    UPDATE(data, id, this.url);
+    UPDATE(this.url,
+      this.limit,
+      this.offset,
+      this.currentCategory,
+      data,
+      id
+    );
     await new Promise((res) => setTimeout(res, 1000 * Math.random()));
     return this.initDataCtx();
   }
 
   async delete(data: any) {
-    DELETE(data);
+    DELETE(this.url, this.limit, this.offset, this.currentCategory, data, data.id
+    );
     await new Promise((res) => setTimeout(res, 1000 * Math.random()));
     return this.initDataCtx();
   }

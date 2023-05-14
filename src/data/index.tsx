@@ -164,18 +164,42 @@ function createCategoriesTree(categories: CategoryType[], parentId: number | nul
       result.push({ id: category.id, name: category.name, products: numberOfProducts });
     }
   }
-  return result;
-}
 
+  return result.map((item) => {
+    if (item.children) {
+      return { ...item, products: item.children.reduce((acc: number, curr: any) => acc + curr.products, 0) }
+    }
+    return item
+  })
+}
 
 const orders: OrderType[] = [
   {
     id: 1,
+    customer_id: 1,
     products: [
       { id: 220, quantity: 4, price: 161 },
-      { id: 220, quantity: 4, price: 161 },
+      { id: 221, quantity: 4, price: 161 },
     ],
     summ: 644,
+  },
+  {
+    id: 2,
+    customer_id: 2,
+    products: [
+      { id: 123, quantity: 3, price: 161 },
+      { id: 1, quantity: 2, price: 161 },
+    ],
+    summ: 1233,
+  },
+  {
+    id: 3,
+    customer_id: 3,
+    products: [
+      { id: 12, quantity: 1, price: 161 },
+      { id: 2, quantity: 4, price: 161 },
+    ],
+    summ: 211,
   },
 ];
 
@@ -185,7 +209,18 @@ const customers: CustomerType[] = [
     name: "Олег",
     phone: "89299991232",
     address: "ул. Пушкина , д. Колотушкина",
-    order_id: 1,
+  },
+  {
+    id: 2,
+    name: "Павел",
+    phone: "89186963655",
+    address: "ул.Черная , д. 2",
+  },
+  {
+    id: 3,
+    name: "Игорь",
+    phone: "89625595535",
+    address: "ул.Белая , д. 1",
   },
 ];
 
@@ -222,11 +257,13 @@ export interface joinedCategories {
 }
 
 
-const collection = () => {
-  const joinedProducts = (): JoinedProduct[] => {
+const collection = (products: ProductType[], brands: BrandType[], categories: CategoryType[]) => {
+  const joinedProducts = (arr: null | ProductType[] | ProductType[]): JoinedProduct[] => {
+
     const findBrand = (id: number) => brands.find((item) => item.id === id)!
     const findCategory = (id: number) => categories.find((item) => item.id === id)!
-    return products.map(({ id, name, price, description, image, brand_id, category_id }) => (
+    const filtered = arr ?? products
+    return filtered.map(({ id, name, price, description, image, brand_id, category_id }) => (
       {
         id,
         name,
@@ -238,7 +275,6 @@ const collection = () => {
       }
     ))
   }
-
 
   const joinedBrands = (): joinedBrands[] => {
     const result = brands.map((brand) => {
@@ -271,46 +307,19 @@ const collection = () => {
     ))
   }
 
+  const getOrdersWithCustomers = () => {
+    return orders.map((order) => {
+      const [findCustomer] = collect(customers).where('id', '===', order.customer_id).toArray()
+      const findProducts: any = order.products.map((product) => {
+        const [info] = joinedProducts(collect(products).where('id', '===', product.id).toArray())
+        return { ...product, ...info }
+      })
+      return { ...order, customer: findCustomer, products: findProducts }
+    })
+  }
 
-  return { joinedProducts, joinedBrands, joinedCategories, filterCategoryProducts }
+  return { joinedProducts, joinedBrands, joinedCategories, filterCategoryProducts, getOrdersWithCustomers }
 }
-
-
-// const getProduct = (id: number) => {
-//   return products.find((item: any) => item.id === id);
-// };
-
-// const getOrdersWithCustomers = () => {
-//   return customers.map(({ id, name, phone, address, order_id }) => ({
-//     id,
-//     name,
-//     phone,
-//     address,
-//     orders: orders
-//       .find((item) => item.id === order_id)
-//       ?.products.map(({ id, quantity, price }: any) => ({
-//         quantity,
-//         price,
-//         ...getProduct(id),
-//       })),
-//   }));
-// };
-
-// const getFragmentWithBrandAndCategory = (fragment: ProductType[]) => {
-//   return fragment.map((item: any) => {
-//     const brand: any = brands.find((brand) => brand.id === item.brand_id);
-//     const category = categories.find(
-//       (category: any) => category.id === item.category_id
-//     );
-//     const name = category ? category.name : "";
-//     return { ...item, brandName: brand.name, categoryName: name };
-//   });
-// };
-
-
-
-
-
 
 
 
@@ -325,9 +334,10 @@ const SELECT = (
   currentCategory: any,
   data: any
 ) => {
-  const collect = collection()
+  const collect = collection(products, brands, categories)
   const startIndex = OFFSET;
   const endIndex = OFFSET + LIMIT;
+
   switch (ctx) {
     case 'products':
       const changeCategory = currentCategory
@@ -336,19 +346,14 @@ const SELECT = (
         const offsetProducts = products.slice(startIndex, endIndex)
         return { items: offsetProducts, length: products.length }
       }
-      const products = collect.joinedProducts()
+      const products = collect.joinedProducts(null)
       const offsetProducts = products.slice(startIndex, endIndex)
       return { items: offsetProducts, length: products.length }
     case 'brands':
       const brands = collect.joinedBrands()
       return { items: brands, length: brands.length }
-    // const products = collect.joinedProducts()
-    // const offsetProducts = products.slice(startIndex, endIndex)
-    // return { items: offsetProducts, length: products.length }
+
     case 'categories':
-      // const products = collect.joinedProducts()
-      // const offsetProducts = products.slice(startIndex, endIndex)
-      // return { items: offsetProducts, length: products.length }
       const categories = collect.joinedCategories()
       return { items: categories, length: categories.length }
 
@@ -361,150 +366,73 @@ const SELECT = (
         return { items: admins[idx], length: admins.length };
       }
       return { items: "error", length: "error" };
+    case 'orders':
+      const orders = collect.getOrdersWithCustomers()
+      return { items: orders, length: orders.length };
   }
 
-
-  // return collect.joinedProducts()
-
-  // const startIndex = OFFSET;
-  // const endIndex = OFFSET + LIMIT;
-  // switch (ctx) {
-  //   case "products":
-  //     if (currentCategory) {
-  //       const fragment: ProductType[] = collect(products)
-  //         .where("category_id", "==", currentCategory)
-  //         .toArray();
-  //       return getFragmentWithBrandAndCategory(fragment);
-  //     } else {
-  //       const fragment = products.slice(startIndex, endIndex);
-  //       return getFragmentWithBrandAndCategory(fragment);
-  //     }
-  //   case "orders":
-  //     return getOrdersWithCustomers();
-  //   case "brands":
-  //     return brands;
-  //   case "categories":
-  //     return categories;
-  //   case "count":
-  //     if (currentCategory) {
-  //       return collect(products)
-  //         .where("category_id", "==", currentCategory)
-  //         .toArray().length;
-  //     }
-  //     return products.length;
-  //   case "login":
-  //     const idx = collect(admins).search(
-  //       ({ name, password }) =>
-  //         data.username === name && password === data.password
-  //     );
-  //     if (idx > -1) {
-  //       return admins[idx];
-  //     }
-  //     return "error";
-  // }
 };
 
-const DELETE = (data: any) => {
-  // switch (data.type) {
-  //   case "brands":
-  //     const idxBrands = brands.findIndex((item: any) => item.id === data.id);
-  //     brands.splice(idxBrands, 1);
-  //     break;
-  //   case "categories":
-  //     const idxCategories = categories.findIndex(
-  //       (item: any) => item.id === data.id
-  //     );
-  //     categories.splice(idxCategories, 1);
-  //     break;
-  //   case "products":
-  //     const idxProducts = products.findIndex(
-  //       (item: any) => item.id === data.id
-  //     );
-  //     products.splice(idxProducts, 1);
-  //     break;
-  // }
+const DELETE = (ctx: string,
+  LIMIT: number,
+  OFFSET: any,
+  currentCategory: any,
+  data: any, id: any) => {
+  switch (ctx) {
+    case "brands":
+      const idxBrands = brands.findIndex((item: any) => item.id === data.id);
+      brands.splice(idxBrands, 1);
+      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data)
+    case "categories":
+      const idxCategories = categories.findIndex(
+        (item: any) => item.id === data.id
+      );
+      categories.splice(idxCategories, 1);
+      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data)
+    case "products":
+      const idxProducts = products.findIndex(
+        (item: any) => item.id === data.id
+      );
+      products.splice(idxProducts, 1);
+      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data)
+  }
 };
 
-const UPDATE = (data: any, id: any, type: any) => {
-  // const elem = { ...data, id };
-  // switch (type) {
-  //   case "brands":
-  //     const idxBrand = brands.findIndex((item: any) => item.id === id);
-  //     const updatedBrand: any = brands[idxBrand];
-  //     Object.entries(elem).forEach(
-  //       ([key, value]) => (updatedBrand[key] = value)
-  //     );
-  //     brands.splice(idxBrand, 1, updatedBrand);
-  //     return brands;
-  //   case "categories":
-  //     const idxCategories = categories.findIndex((item: any) => item.id === id);
-  //     const updatetCategory: any = categories[idxCategories];
-  //     Object.entries(elem).forEach(
-  //       ([key, value]) => (updatetCategory[key] = value)
-  //     );
-  //     categories.splice(idxCategories, 1, updatetCategory);
-  //     return categories;
-  //   case "products":
-  //     const idxProducts = products.findIndex((item: any) => item.id === id);
-  //     const updatedProduct: any = products[idxProducts];
-  //     Object.entries(elem).forEach(
-  //       ([key, value]) => (updatedProduct[key] = value)
-  //     );
-  //     products.splice(idxProducts, 1, updatedProduct);
-  //     return products;
-  // }
+const UPDATE = (url: any, limit: any, offset: any, currentCategory: any, data: any, id: any) => {
+  switch (url) {
+    case 'products':
+      const productIdx = products.findIndex((product: any) => product.id === id)
+      products.splice(productIdx, 1, { ...data, id })
+      return SELECT(url, limit, offset, currentCategory, { ...data, id })
+    case 'brands':
+      const brandIdx = brands.findIndex((brand: any) => brand.id === id)
+      brands.splice(brandIdx, 1, { ...data, id })
+      return SELECT(url, limit, offset, currentCategory, { ...data, id })
+    case 'categories':
+      const categoryIdx = categories.findIndex((category: any) => category.id === id)
+      const updatedCategory = { ...categories[categoryIdx], ...data }
+      categories.splice(categoryIdx, 1, updatedCategory)
+      console.log(categories)
+      return SELECT(url, limit, offset, currentCategory, updatedCategory)
+  }
 };
 
-const INSERT = (data: any, type: any) => {
-  // switch (type) {
-  //   case "order":
-  //     if (true) {
-  //       const {
-  //         customer: { name, address, phone },
-  //         products,
-  //         summ,
-  //       }: any = { ...data };
-  //       const order = { id: orders.length + 1, products, summ };
-  //       const customer = {
-  //         id: customers.length + 1,
-  //         name,
-  //         address,
-  //         phone,
-  //         order_id: order.id,
-  //       };
-  //       orders.push(order);
-  //       customers.push(customer);
-  //     }
-  //     return;
-  //   case "products":
-  //     products.push({
-  //       id: products.length + 1,
-  //       name: data.name,
-  //       price: data.price,
-  //       category_id: data.category_id,
-  //       brand_id: data.brand_id,
-  //       description: data.description,
-  //       image: data.image,
-  //     });
-  //     break;
-  //   case "categories":
-  //     categories.push({
-  //       id: categories.length + 1,
-  //       name: data.name,
-  //       parent_id: data.parent_id,
-  //     });
-  //     break;
-  //   case "brands":
-  //     brands.push({
-  //       id: brands.length + 1,
-  //       name: data.name,
-  //     });
-  //     brands.push({
-  //       id: brands.length + 1,
-  //       name: data.name,
-  //     });
-  //     return brands;
-  // }
+const INSERT = (type: any, limit: any, offset: any, currentCategory: any, data: any) => {
+  switch (type) {
+    case 'products':
+      const poductId = products.length + 1
+      products.push({ ...data, id: poductId })
+      return SELECT(type, limit, offset, currentCategory, { ...data, id: poductId })
+    case 'brands':
+      const brandId = brands.length + 1
+      brands.push({ ...data, id: brandId })
+      return SELECT(type, limit, offset, currentCategory, { ...data, id: brandId })
+    case 'categories':
+      const categoryId = categories.length + 1
+      categories.push({ ...data, id: categoryId, parent_id: null })
+      return SELECT(type, limit, offset, currentCategory, { ...data, id: categoryId })
+  }
+
 };
 
 export { SELECT, DELETE, UPDATE, INSERT };

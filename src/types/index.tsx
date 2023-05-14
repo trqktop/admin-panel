@@ -35,6 +35,7 @@ export type OrderType = {
   id: number;
   products: OrderProduct[];
   summ: number;
+  customer_id: number
 };
 
 export type CustomerType = {
@@ -42,7 +43,6 @@ export type CustomerType = {
   name: string;
   phone: string;
   address: string;
-  order_id: number;
 };
 
 export type CollectionType = {
