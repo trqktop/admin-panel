@@ -7,6 +7,8 @@ class Service {
   data: any;
   postData: any;
   currentCategory: any;
+  searchText?: string
+  brandFilter?: any
   constructor() {
     this.url = "";
     this.limit = 20;
@@ -15,14 +17,17 @@ class Service {
     this.data = null;
     this.postData = null;
     this.currentCategory = null;
+    this.brandFilter = null
   }
 
-  options({ url, page, limit, currentCategory }: any) {
+  options({ url, page, limit, currentCategory, searchText, brandFilter }: any) {
     this.limit = limit;
     this.url = url;
     this.page = page;
     this.currentCategory = currentCategory;
     this.offset = (page - 1) * this.limit;
+    this.searchText = searchText
+    this.brandFilter = brandFilter
   }
 
   async get() {
@@ -66,7 +71,9 @@ class Service {
       this.limit,
       this.offset,
       this.currentCategory,
-      this.postData
+      this.postData,
+      this.searchText,
+      this.brandFilter
     );
   }
 }

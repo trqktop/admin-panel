@@ -1,15 +1,17 @@
-import { Button, Table } from "antd";
+import { Button, Space, Table } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
 import { useOutletContext } from "react-router-dom";
 import { getFormatedData } from "../../../utils/tableDateFormater";
 import { getProductColumns } from "../../../constants";
 import { OutletContextType } from "../AdminPageContainer";
+import SearchForm from "../../../components/SearchForm";
 const AdminSiderTableProductsContainer = () => {
   const {
     state,
     openUpdateModal,
     openCreateModal,
-    onDeleteItem
+    onDeleteItem,
+    onSearch
   }: any = useOutletContext<OutletContextType>();
   // const state = tabData.products;
   const products = state.products
@@ -72,12 +74,14 @@ const AdminSiderTableProductsContainer = () => {
     },
   ];
 
-
   return (
     <div>
-      <Button onClick={() => openCreateModal("products")}>
-        create product
-      </Button>
+      <SearchForm onSearch={onSearch} />
+      <Space>
+        <Button onClick={() => openCreateModal("products")}>
+          create product
+        </Button>
+      </Space>
       <Table
         bordered
         size="small"

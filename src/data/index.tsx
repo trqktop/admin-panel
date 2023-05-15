@@ -322,7 +322,47 @@ const collection = (products: ProductType[], brands: BrandType[], categories: Ca
 }
 
 
-
+const searchProducts = (searchText: string, collect: any): any => {
+  const filteredList = searchText.trim().toLowerCase().split(' ');
+  const filteredProducts = collect.joinedProducts(null).filter((product: any) => {
+    const nameWords = product.name.trim().toLowerCase().split(' ');
+    const foundWords = filteredList.filter((item) => {
+      const itemWords = item.trim().toLowerCase().split(' ');
+      return itemWords.some((itemWord) => {
+        return nameWords.some((nameWord: any) => {
+          const nWord = nameWord.trim().toLowerCase();
+          return nWord === itemWord || nWord.includes(itemWord) || itemWord.includes(nWord);
+        });
+      });
+    });
+    return foundWords.length === filteredList.length;
+  }).sort((a: any, b: any) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+    const relevanceA = nameA === searchText.trim().toLowerCase() ? 100 : nameA.split(' ').reduce((total: any, nameWord: any) => {
+      const itemWord = searchText.trim().toLowerCase();
+      if (nameWord === itemWord) {
+        return total + nameWord.length * 3;
+      }
+      if (nameWord.includes(itemWord) || itemWord.includes(nameWord)) {
+        return total + nameWord.length * 2;
+      }
+      return total;
+    }, 0);
+    const relevanceB = nameB === searchText.trim().toLowerCase() ? 100 : nameB.split(' ').reduce((total: any, nameWord: any) => {
+      const itemWord = searchText.trim().toLowerCase();
+      if (nameWord === itemWord) {
+        return total + nameWord.length * 3;
+      }
+      if (nameWord.includes(itemWord) || itemWord.includes(nameWord)) {
+        return total + nameWord.length * 2;
+      }
+      return total;
+    }, 0);
+    return relevanceB - relevanceA;
+  });
+  return filteredProducts
+}
 
 
 
@@ -332,7 +372,10 @@ const SELECT = (
   LIMIT: number,
   OFFSET: any,
   currentCategory: any,
-  data: any
+  data: any,
+  searchText: any,
+  brandFilter: any
+
 ) => {
   const collect = collection(products, brands, categories)
   const startIndex = OFFSET;
@@ -345,6 +388,19 @@ const SELECT = (
         const products = collect.filterCategoryProducts(currentCategory)
         const offsetProducts = products.slice(startIndex, endIndex)
         return { items: offsetProducts, length: products.length }
+      }
+      if (searchText) {
+        const filteredProducts: ProductType[] = searchProducts(searchText, collect)
+        const offsetFilteredProducts = filteredProducts.slice(startIndex, endIndex)
+        return { items: offsetFilteredProducts, length: offsetFilteredProducts.length };
+      }
+      if (brandFilter) {
+        if (brandFilter.length) {
+          const brandsId = brandFilter
+          const productsWithBrands: any[] = collect.joinedProducts(null).filter((item: any) => brandsId.some((id: number) => id === item.brand.id))
+          const offsetFilteredProducts = productsWithBrands.slice(startIndex, endIndex)
+          return { items: offsetFilteredProducts, length: productsWithBrands.length };
+        }
       }
       const products = collect.joinedProducts(null)
       const offsetProducts = products.slice(startIndex, endIndex)
@@ -369,8 +425,35 @@ const SELECT = (
     case 'orders':
       const orders = collect.getOrdersWithCustomers()
       return { items: orders, length: orders.length };
+    // case 'search':
+    //   //Алгоритм Левенштейна , находит длину совподения и выдает результат по реливантности
+    //   const filteredList = data.toLowerCase().split(' ');
+    //   console.log(filteredList)
+    //   const filteredProducts = collect.joinedProducts(null).filter((product) => {
+    //     const name = product.name.toLowerCase();
+    //     const brand = product.brand.name.toLowerCase();
+    //     const category = product.category.name.toLowerCase();
+    //     let relevance = 0;
+    //     filteredList.forEach((item: string) => {
+    //       if (name.includes(item)) {
+    //         relevance += item.length * 2;
+    //       }
+    //       if (brand.includes(item)) {
+    //         relevance += item.length;
+    //       }
+    //       if (category.includes(item)) {
+    //         relevance += item.length;
+    //       }
+    //     });
+    //     return relevance > 0;
+    //   }).sort((a, b) => {
+    //     const nameA = a.name.toLowerCase();
+    //     const nameB = b.name.toLowerCase();
+    //     return nameA.indexOf(data) - nameB.indexOf(data);
+    //   });
+    //   const offsetFilteredProducts = filteredProducts.slice(startIndex, endIndex)
+    //   return { items: offsetFilteredProducts, length: offsetFilteredProducts.length };
   }
-
 };
 
 const DELETE = (ctx: string,
@@ -382,19 +465,19 @@ const DELETE = (ctx: string,
     case "brands":
       const idxBrands = brands.findIndex((item: any) => item.id === data.id);
       brands.splice(idxBrands, 1);
-      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data)
+      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data, null, null)
     case "categories":
       const idxCategories = categories.findIndex(
         (item: any) => item.id === data.id
       );
       categories.splice(idxCategories, 1);
-      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data)
+      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data, null, null)
     case "products":
       const idxProducts = products.findIndex(
         (item: any) => item.id === data.id
       );
       products.splice(idxProducts, 1);
-      return SELECT(ctx, LIMIT, OFFSET, currentCategory, data)
+      return SELECT(ctx, LIMIT, OFFSET, currentCategory, null, null, null)
   }
 };
 
@@ -403,17 +486,17 @@ const UPDATE = (url: any, limit: any, offset: any, currentCategory: any, data: a
     case 'products':
       const productIdx = products.findIndex((product: any) => product.id === id)
       products.splice(productIdx, 1, { ...data, id })
-      return SELECT(url, limit, offset, currentCategory, { ...data, id })
+      return SELECT(url, limit, offset, currentCategory, { ...data, id }, null, null)
     case 'brands':
       const brandIdx = brands.findIndex((brand: any) => brand.id === id)
       brands.splice(brandIdx, 1, { ...data, id })
-      return SELECT(url, limit, offset, currentCategory, { ...data, id })
+      return SELECT(url, limit, offset, currentCategory, { ...data, id }, null, null)
     case 'categories':
       const categoryIdx = categories.findIndex((category: any) => category.id === id)
       const updatedCategory = { ...categories[categoryIdx], ...data }
       console.log(updatedCategory)
       categories.splice(categoryIdx, 1, updatedCategory)
-      return SELECT(url, limit, offset, currentCategory, updatedCategory)
+      return SELECT(url, limit, offset, currentCategory, updatedCategory, null, null)
   }
 };
 
@@ -422,15 +505,15 @@ const INSERT = (type: any, limit: any, offset: any, currentCategory: any, data: 
     case 'products':
       const poductId = products.length + 1
       products.push({ ...data, id: poductId })
-      return SELECT(type, limit, offset, currentCategory, { ...data, id: poductId })
+      return SELECT(type, limit, offset, currentCategory, { ...data, id: poductId }, null, null)
     case 'brands':
       const brandId = brands.length + 1
       brands.push({ ...data, id: brandId })
-      return SELECT(type, limit, offset, currentCategory, { ...data, id: brandId })
+      return SELECT(type, limit, offset, currentCategory, { ...data, id: brandId }, null, null)
     case 'categories':
       const categoryId = categories.length + 1
       categories.push({ ...data, id: categoryId, parent_id: data.parent_id ?? null })
-      return SELECT(type, limit, offset, currentCategory, { ...data, id: categoryId })
+      return SELECT(type, limit, offset, currentCategory, { ...data, id: categoryId }, null, null)
     case 'order':
       const customerId = customers.length + 1
       customers.push({ ...data.customer, id: customerId })

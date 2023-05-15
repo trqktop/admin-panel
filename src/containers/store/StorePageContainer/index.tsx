@@ -1,6 +1,6 @@
 import Layout, { Content } from "antd/es/layout/layout";
 import styles from "./StoreContainer.module.scss";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import DrawerMenu from "../../../components/store/StoreDrawerMenu";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import StoreHeader from "../../../components/store/StoreHeader";
@@ -11,6 +11,9 @@ import AdminLoginForm from "../../../components/admin/AdminLoginForm";
 // import StoreBrandFilter from "../../components/StoreBrandFilter";
 import Service from "../../../service";
 import { Pagination, Space, Spin } from "antd";
+import SearchForm from "../../../components/SearchForm/index";
+import BrandsFilter from "../../../components/BrandsFilter";
+
 
 const stateChanger = (prevState: AppStoreState, product: any, listName: keyof AppStoreState): AppStoreState => {
   const state: any = { ...prevState };
@@ -46,13 +49,17 @@ export interface AppStoreState {
   basketList: any[]
   isOpenedDrawerMenu: boolean
   isLoginFormVisible: boolean
-  // Add the rest of the state properties here if needed
+  searchText: string | null
 }
+
+
 interface FetchOptions {
   url: string;
   limit: number;
   page: number;
   currentCategory: string | null;
+  searchText?: string | null
+  brandFilter?: any[] | null
 }
 
 
@@ -76,8 +83,8 @@ const StorePageContainer: React.FC = () => {
     // isBrandsLoading: true,
     // isPaginationVisible: true,
     isLoginFormVisible: false,
+    searchText: '',
     // currentCategory: null,
-
     brands: {
       name: 'brands',
       items: [],
@@ -85,7 +92,7 @@ const StorePageContainer: React.FC = () => {
       isLoaded: false,
       length: 0,
       limit: 20,
-      currentCategory: null
+      currentCategory: null,
     },
     categories: {
       name: 'categories',
@@ -103,7 +110,7 @@ const StorePageContainer: React.FC = () => {
       length: 0,
       isLoaded: false,
       limit: 20,
-      currentCategory: null
+      currentCategory: null,
     }
   });
   const sources: DataType[] = [state.brands, state.categories, state.products]
@@ -141,7 +148,6 @@ const StorePageContainer: React.FC = () => {
       setInitialData(options)
     })
   }, [])
-
 
 
 
@@ -204,71 +210,6 @@ const StorePageContainer: React.FC = () => {
     setState((p) => ({ ...p, basketList: [] }));
   }, []);
 
-  // useEffect(() => {
-  //   const getProductsLength = async (url: string) => {
-  //     const service = new Service();
-  //     service.options({
-  //       url,
-  //       page: state.page,
-  //       limit: state.limit,
-  //       currentCategory: state.currentCategory,
-  //     });
-  //     const length = await service.get();
-  //     setState((p:any) => ({
-  //       ...p,
-  //       productLength: length,
-  //       isPaginationLoading: false,
-  //       isPaginationVisible: true,
-  //     }));
-  //   };
-  //   getProductsLength("count");
-  //   const getData = async (url: string) => {
-  //     const service = new Service();
-  //     service.options({
-  //       url,
-  //       page: state.page,
-  //       limit: state.limit,
-  //       currentCategory: state.currentCategory,
-  //     });
-  //     const products = await service.get();
-  //     setState((p:any) => ({
-  //       ...p,
-  //       products: products,
-  //       isProductsLoading: false,
-  //       isPaginationVisible: true,
-  //     }));
-  //   };
-  //   getData("products");
-  // }, [state.page, state.currentCategory, state.limit]);
-
-  // useEffect(() => {
-  //   const getCategories = async (url: string) => {
-  //     const service = new Service();
-  //     service.options({ url });
-  //     const categories = await service.get();
-  //     setState((p:any) => ({
-  //       ...p,
-  //       isCategoriesLoading: false,
-  //       categories: categories,
-  //       isPaginationVisible: true,
-  //     }));
-  //   };
-  //   getCategories("categories");
-
-  //   const getBrands = async (url: string) => {
-  //     const service = new Service();
-  //     service.options({ url });
-  //     const brands = await service.get();
-  //     setState((p:any) => ({
-  //       ...p,
-  //       isBrandsLoading: false,
-  //       brands: brands,
-  //       isPaginationVisible: true,
-  //     }));
-  //   };
-  //   getBrands("brands");
-  // }, []);
-
 
   useEffect(() => {
     const updateProducts = async () => {
@@ -276,7 +217,9 @@ const StorePageContainer: React.FC = () => {
         url: state.products.name,
         limit: state.products.limit,
         page: state.products.page,
-        currentCategory: state.products.currentCategory
+        currentCategory: state.products.currentCategory,
+        searchText: state.searchText,
+        brandFilter: state.brandFilter
       }
       const service = new Service();
       service.options(options);
@@ -284,11 +227,12 @@ const StorePageContainer: React.FC = () => {
         const products = await service.get();
         setState((p) => ({
           ...p,
+          // searchText: null,
           products: {
             ...p.products,
             items: products?.items || [],
             length: products?.length || 0,
-            name: options.url,
+            name: state.products.name,
             isLoaded: true,
             page: state.products.page,
             limit: 20,
@@ -299,7 +243,7 @@ const StorePageContainer: React.FC = () => {
       }
     }
     updateProducts()
-  }, [state.products.page, state.products.currentCategory])
+  }, [state.products.page, state.products.currentCategory, state.searchText, state.brandFilter])
 
 
   const onChangePagination = (page: any) => {
@@ -322,43 +266,6 @@ const StorePageContainer: React.FC = () => {
     }));
   };
 
-  // const onProductSelect = (product: any) => {
-  //   setState((p: any) => ({
-  //     ...p,
-  //     selectedProduct: product,
-  //     isPaginationVisible: false,
-  //   }));
-  // };
-
-  // const setPaginationVisible = () => {
-  //   setState((p: any) => ({ ...p, isPaginationVisible: true }));
-  // };
-
-  // const pagination = useMemo(() => {
-  //   if (state.isPaginationVisible) {
-  //     if (state.isPaginationLoading) {
-  //       return <Spin />;
-  //     } else {
-  //       return (
-  //         <Pagination
-  //           size="small"
-  //           simple
-  //           current={state.page}
-  //           total={state.productLength}
-  //           pageSize={state.limit}
-  //           onChange={onChangePagination}
-  //         />
-  //       );
-  //     }
-  //   }
-  //   return null;
-  // }, [
-  //   state.isPaginationVisible,
-  //   state.isPaginationLoading,
-  //   state.page,
-  //   state.productLength,
-  //   state.limit,
-  // ]);
 
   const closeAdminLoginModal = () => {
     setState((p) => ({ ...p, isLoginFormVisible: false }));
@@ -382,6 +289,47 @@ const StorePageContainer: React.FC = () => {
     setState((p) => stateChanger(p, product, "favoriteList"));
   }, []);
 
+
+  const clearSearch = () => {
+    setState((p) => ({ ...p, searchText: null }))
+  }
+  const navigate = useNavigate()
+  const onSearch = async (text: any) => {
+    navigate('/')
+    setState((p) => ({ ...p, searchText: text, currentCategory: null }))
+    // const service = new Service();
+    // // navigate('/')
+    // // const source = sources.find((src: any) => src.name === type)
+    // const options: any = {
+    //   url: 'search',
+    //   limit: state.products.limit,
+    //   page: state.products.page,
+    //   currentCategory: state.products.currentCategory,
+    // }
+    // service.options(options);
+    // try {
+    //   const result = await service.post(data);
+    //   setState((p) => ({
+    //     ...p,
+    //     products: {
+    //       ...p.products,
+    //       items: result?.items || [],
+    //       length: result?.length || 0,
+    //       name: options.url,
+    //       isLoaded: true,
+    //       // page: source.page,
+    //       // limit: 20,
+    //       // currentCategory: source.currentCategory
+    //     },
+    //   }));
+    //   navigate('/')
+    // } catch (error) {
+    //   console.error(error);
+    // }
+  }
+
+  const onChangeBrandFilter = (e: any) => setState((p) => ({ ...p, brandFilter: e, searchText: '' }))
+
   const outletContext = {
     state,
     favoriteHandler,
@@ -399,8 +347,11 @@ const StorePageContainer: React.FC = () => {
         openDrawerMenuHandler={openDrawerMenuHandler}
         favoriteListCount={state.favoriteList.length}
         basketListCount={state.basketList.length}
+        onSearch={onSearch}
+        clearSearch={clearSearch}
       // setPaginationVisible={setPaginationVisible}
       />
+      <BrandsFilter brands={state.brands} onChange={onChangeBrandFilter} />
       <Layout className={styles.contentContainer}>
         <DrawerMenu
           isOpen={state.isOpenedDrawerMenu}
